@@ -4,8 +4,8 @@ export print,arrprint, lineprint, show
 import PermPlain: permsgn_from_lengths
 import Base: print, show
 
-immutable PermCycs
-    data::Array{Array{Int,1},1}
+immutable PermCycs{T<:Integer}
+    data::Array{Array{T,1},1}
 end
 
 ## Construct PermCycs objects ##
@@ -17,6 +17,8 @@ function permcycs(cycs...)
     isperm(pc) || error("Trying to construct PermCycs from illegal or non-disjoint cycles.")
     return pc
 end
+
+permcycs() = PermCycs(Array(Array{Int,1},0))
 
 ## Copying, indexing, ... ##
 
