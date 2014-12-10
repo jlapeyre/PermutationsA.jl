@@ -14,10 +14,8 @@ end
 function permcycs(cycs...)
     length(cycs) == 0 && return PermCycs([])
     T = typeof(cycs[1][1])
-#    println("got type $T")
     a = [collect(T,c) for c in cycs]
-#    println(typeof(a))
-    data = PermPlain.canoncycles(a)
+    data = canoncycles(a)
     pc = PermCycs(data)
     isperm(pc) || error("Trying to construct PermCycs from illegal or non-disjoint cycles.")
     return pc

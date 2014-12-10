@@ -44,7 +44,7 @@ function isid(pin::PermList)
 end
 commute(p::PermList,q::PermList) = permcommute(p.data,q.data)
 distance(p::PermList, q::PermList) = permdistance(p.data,q.data)
-==(p::PermList, q::PermList) = PermPlain.permlistisequal(p.data,q.data) # agrees with gap
+==(p::PermList, q::PermList) = permlistisequal(p.data,q.data) # agrees with gap
 sign(p::PermList) = permsgn(p.data)
 order(p::PermList) = permorder(p.data)
 cyclelengths(p::PermList) = cyclelengths(p.data)
