@@ -3,31 +3,26 @@ import PermPlain: permlistisequal
 export leastmoved, greatestmoved, supportsize, support, fixed, list
 export randcyclelist
 export commute, isperm
-export compose!
+export compose!, eltype
 export print, arrprint, cycprint, show
 
 import Base: print, show, isperm
+import Main: eltype
 import DataStructures: list
 
 immutable PermList{T<:Integer}
     data::Array{T,1}
 end
 
+eltype{T}(p::PermList{T}) = T
+
 ## Construct PermList objects ##
 
 # maybe check validity, make less generic methods for efficiency
 # Allow different element types ?
-function permlist(plist...)
-    return PermList(collect(plist))
-end
-
-function permlist{T<:Integer}(a::Vector{T})
-    return PermList(a)
-end
-
-function permlist()
-    return PermList(Array(Int,0))
-end
+permlist(plist...) = PermList(collect(plist))
+permlist{T<:Integer}(a::Vector{T}) = PermList(a)
+permlist() = PermList(Array(Int,0))
 
 ## Copying, indexing, ... ##
 
@@ -101,7 +96,7 @@ function same(pin::PermList, qin::PermList)
     q = qin.data
     lp = length(p)
     lq = length(q)
-    d = Array(Int,0)
+    d = Array(eltype(pin),0)
     if lp < lq
         for i in 1:lp
             p[i] == q[i] ? push!(d,p[i]) : nothing
