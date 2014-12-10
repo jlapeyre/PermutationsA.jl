@@ -51,9 +51,9 @@ cycletype(p::PermList) = cycletype(p.data)
 
 ## Generate, transform  PermList objects ##
 
-randpermlist(n::Int) = PermList(randperm(n))
-randcyclelist(n::Int) = PermList(randcycle(n))
-idpermlist(n::Int) = PermList([1:n])
+randpermlist(n::Integer) = PermList(randperm(n))
+randcyclelist(n::Integer) = PermList(randcycle(n))
+idpermlist(n::Integer) = PermList([1:n])
 inv(p::PermList) = PermList(invperm(p.data))
 
 ## Apply permutation, and permutation operations ##
@@ -66,10 +66,8 @@ getindex(v::String, p::PermList) = v[p.data] # How to define this for everything
 *(p::PermList, q::PermList) = PermList(permcompose(p.data,q.data))
 # updating ops are "syntactic-operators". Don't know how to define method for them
 # *=(p::PermList, q::PermList) = (permcompose!(p.data,q.data), p)
-function compose!(p::PermList, q::PermList)
-    permcompose!(p.data,q.data)
-    return p
-end
+compose!(p::PermList, q::PermList) = permcompose!(p.data,q.data)
+
 # see pari,gap for more efficient algorithm
 /(p::PermList, q::PermList) = PermList(permcompose(p.data,invperm(q.data)))
 ^(p::PermList, k::Integer) = PermList(permpower(p.data,k))
@@ -186,17 +184,7 @@ function arrprint(io::IO, p::PermList)
 end
 
 arrprint(p::PermList) = arrprint(STDOUT,p)
-
-function cycprint(io::IO,p::PermList)
-    print(io,cycles(p))
-end
-
+cycprint(io::IO,p::PermList) = print(io,cycles(p))
 cycprint(p::PermList) = cycprint(STDOUT,p)
-
-function print(io::IO, p::PermList)
-    permarrprint(io,p.data)
-end
-
-function show(io::IO, p::PermList)
-    print(io,p)
-end
+print(io::IO, p::PermList) = permarrprint(io,p.data)
+show(io::IO, p::PermList) = print(io,p)
