@@ -9,8 +9,8 @@ export print, arrprint, cycprint, show
 import Base: print, show, isperm
 import DataStructures: list
 
-immutable PermList
-    data::Array{Int,1}
+immutable PermList{T<:Integer}
+    data::Array{T,1}
 end
 
 ## Construct PermList objects ##
@@ -18,11 +18,15 @@ end
 # maybe check validity, make less generic methods for efficiency
 # Allow different element types ?
 function permlist(plist...)
-    return PermList(collect(Int,plist))
+    return PermList(collect(plist))
 end
 
-function permlist(a::Vector{Int})
+function permlist{T<:Integer}(a::Vector{T})
     return PermList(a)
+end
+
+function permlist()
+    return PermList(Array(Int,0))
 end
 
 ## Copying, indexing, ... ##

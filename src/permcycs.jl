@@ -13,10 +13,7 @@ end
 # construct permutation from list of disjoint cycles
 function permcycs(cycs...)
     length(cycs) == 0 && return PermCycs([])
-    T = typeof(cycs[1][1])
-    a = [collect(T,c) for c in cycs]
-    data = canoncycles(a)
-    pc = PermCycs(data)
+    pc = PermCycs(canoncycles([collect(typeof(cycs[1][1]),c) for c in cycs]))
     isperm(pc) || error("Trying to construct PermCycs from illegal or non-disjoint cycles.")
     return pc
 end
