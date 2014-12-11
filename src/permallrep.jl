@@ -1,6 +1,5 @@
 ### methods using more than one object type representing permutations
-
-export list
+export list, psparse
 
 ## Construct objects ##
 
@@ -11,6 +10,8 @@ randpermcycs{T<:Integer}(n::T) = cycles(randpermlist(n))
 # Don't know which to choose
 ==(p::PermList, c::PermCycs) = p == list(c)
 ==(c::PermCycs, p::PermList) = cycles(p) == c
+==(c::PermCycs, m::PermMat) = c == cycles(m)
+==(m::PermMat, c::PermCycs) = m == matrix(c)
 distance(c1::PermCycs, c2::PermCycs) = distance(permlist(c1),permlist(c2)) # inefficient
 
 ## Apply permutation, and permutation operations ##
@@ -43,7 +44,12 @@ cycles(m::Array{Integer,2}) = cycles(list(m)) # inefficient
 list(c::PermCycs, n=0) = PermList(cycstoperm(c.data,n))
 list(p::PermList) = p  # not a copy !
 list(m::PermMat) = PermList(m.data)
-list(m::Array{Integer,2}) = PermList(m * [1:size(m,1)])
+#list(m::Array{Integer,2}) = PermList(m * [1:size(m,1)]) why do this ?
+list(sp::PermSparse) = PermList(PermPlain.sparsetolist(sp.data))
+cycles(sp::PermSparse) = PermCycs(PermPlain.sparsetocycles(sp.data))
+psparse(p::PermList) = PermSparse(p.data)
+psparse(c::PermCycs) = PermSparse(c.data)
+psparse(m::PermMat) = PermSparse(m.data)
 
 PermMat(p::PermList) = PermMat(p.data)
 PermMat(c::PermCycs) = PermMat(list(c))

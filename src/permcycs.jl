@@ -1,10 +1,10 @@
 export list, flatten, support, fixed, cyclelengths
-export print,arrprint, lineprint, show, idpermcyc,  idperm
+export print,arrprint, lineprint, show, idpermcyc,  idperm, plength
 
 import PermPlain: permsgn_from_lengths, permsgn, cyclelengths
 import Base: print, show
 
-immutable PermCycs{T<:Integer}
+immutable PermCycs{T<:Integer} <:AbstractPerm{T}
     data::Array{Array{T,1},1}
 end
 
@@ -26,13 +26,15 @@ idpermcyc() = PermCycs()
 idpermcyc{T}(::Type{T}) = PermCycs(T)
 idperm{T}(c::PermCycs{T}) = PermCycs(T)
 one{T}(c::PermCycs{T}) = PermCycs(T)
+plength(c::PermCycs) = greatestmoved(c)
 
 ## Copying, indexing, ... ##
 
 copy(c::PermCycs) = PermCycs(copy(c.data))
 length(c::PermCycs) = length(c.data)
-getindex(c::PermCycs, k) = c.data[k]
-setindex!(c::PermCycs, ci, k) = c.data[k] = ci
+# this is not useful... or ... hmmmm
+getindex(c::PermCycs, k::Real) = c.data[k]
+setindex!(c::PermCycs, ci::Real, k::Real) = c.data[k] = ci
 
 ## Compare, test, and/or return properties ##
 
@@ -48,6 +50,7 @@ cyclelengths(c::PermCycs) = cyclelengths(c.data)
 cycletype(c::PermCycs) = cycletype(c.data)
 
 ## Apply permutation, and permutation operations ##
+getindex{T}(v::Array{T,1},c::PermCycs{Bool}) = error("Silence compiler. You don't want Bool, anyway")
 getindex(v::Array, c::PermCycs) = v[list(c).data]
 getindex(v::String, c::PermCycs) = v[list(c).data] # How to define this for everything?
 
@@ -101,3 +104,5 @@ arrprint(c::PermCycs) = arrprint(STDOUT,c)
 lineprint(io::IO, c::PermCycs) = print(io,list(c))
 lineprint(c::PermCycs) = lineprint(STDOUT,c)
 show(io::IO, c::PermCycs) = print(io,c)
+# This is needed to avoid trying to print PermList with showarray and failing in 1000 ways
+writemime(io::IO, ::MIME"text/plain", p::PermCycs) = print(io,p)

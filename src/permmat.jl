@@ -12,7 +12,7 @@ import Base: full, sparse, getindex, size, similar, copy, eltype, ctranspose,
 
 ## object and constructors  ##
 
-immutable PermMat{T<:Real} <: AbstractMatrix{T}
+immutable PermMat{T<:Real} <: AbstractPerm{T}
     data::Vector{T}
 end
 
@@ -26,14 +26,19 @@ plength(m::PermMat) = length(m.data)
 
 ## size, copy, indexing ##
 
-getindex{T}(m::PermMat{T}, i::Integer, j::Integer) =  m.data[j] == i ? one(T) : zero(T)
+#getindex{T}(m::PermMat{T}, i::Integer, j::Integer) =  m.data[j] == i ? one(T) : zero(T)
 
+# Single dimensional index means different things in different
+# contexts. Don't think we are using this anyway
 function getindex{T}(m::PermMat{T}, k::Integer)
     i,j = divrem(k-1,plength(m))
     return m.data[j+1] == i+1 ? one(T) : zero(T)
-end     
+end
 
-size{T}(m::PermMat{T}) = (s = plength(m); (s,s))
+#getindex{T}(m::PermMat{T}, k::Integer) = k > length(m.data) ? convert(T,k) : (m.data)[k]
+
+map(m::PermMat, k::Real) = k > length(m.data) ? convert(T,k) : (m.data)[k]
+
 copy(m::PermMat) = PermMat(copy(m.data))
 similar(m::PermMat, atype, dims) = Array(atype, dims)
 eltype{T}(m::PermMat{T}) = T
@@ -65,8 +70,6 @@ inv(m::PermMat) = PermMat(invperm(m.data))
 \(m::PermMat, k::Int) = k / m
 #*(m::PermMat, v::Vector) = v[m.data]
 *{T}(m::PermMat, a::AbstractVector{T}) = [ m * i for i in a]
-ctranspose(m::PermMat) = inv(m)
-transpose(m::PermMat) = inv(m)
 
 function ==(pm::PermMat, m::AbstractMatrix)
     (n1,n2) = size(m)

@@ -1,17 +1,18 @@
-import Base: one
+import Base: one, showarray, print, show, writemime
 
 export leastmoved, greatestmoved, supportsize, support, fixed, list,
-       idperm
+       idperm, plength
+
 export randcyclelist
 export commute, isperm
 export compose!, eltype
-export print, arrprint, cycprint, show
+export print, arrprint, cycprint, show, map
 
-import Base: print, show, isperm
+import Base: isperm, size
 import Main: eltype
 import DataStructures: list
 
-immutable PermList{T<:Integer}
+immutable PermList{T<:Integer} <:AbstractPerm
     data::Array{T,1}
 end
 
@@ -29,8 +30,11 @@ permlist() = PermList(Array(Int,0))
 
 copy(p::PermList) = PermList(copy(p.data))
 length(p::PermList) = length(p.data)
-getindex(p::PermList, k) = p.data[k]
+plength(p::PermList) = length(p.data)
+getindex(p::PermList, k::Real) = p.data[k]
 setindex!(p::PermList, i::Int, k::Integer) = p.data[k] = i
+map{T}(p::PermList{T}, k::Real) = k > length(p.data) ? convert(T,k) : (p.data)[k]
+
 
 ## Compare, test, and/or return properties ##
 
@@ -115,3 +119,6 @@ print(io::IO, p::PermList) = permarrprint(io,p.data)
 lineprint(io::IO, p::PermList) = print(io,p)
 lineprint(p::PermList) = lineprint(STDOUT,p)
 show(io::IO, p::PermList) = print(io,p)
+show(p::PermList) = print(p)
+# This is needed to avoid trying to print PermList with showarray and failing in 1000 ways
+writemime(io::IO, ::MIME"text/plain", p::PermList) = print(io,p)
