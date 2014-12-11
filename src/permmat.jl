@@ -1,6 +1,7 @@
 export PermMat
 
-#export randpermmat, order, sign, commute, idpermmat
+export randpermmat, idpermmat
+#, order, sign, commute, idpermmat
 
 import Base: full, getindex, size, similar, copy, eltype, ctranspose,
              transpose, one
@@ -11,27 +12,27 @@ import Base: full, getindex, size, similar, copy, eltype, ctranspose,
 ## object and constructors  ##
 
 immutable PermMat{T<:Real} <: AbstractMatrix{T}
-    p::Vector{T}
+    data::Vector{T}
 end
 
-isperm(m::PermMat) = isperm(m.p)
+isperm(m::PermMat) = isperm(m.data)
 randpermmat(n::Integer) = PermMat(randperm(n))
 idpermmat(n::Integer) = PermMat([1:n])
 idpermmat(T::DataType, n::Integer) = PermMat([one(T):convert(T,n)])
-idperm{T}(m::PermMat{T}) = PermMat([one(T):convert(T,length(m.p))])
+idperm{T}(m::PermMat{T}) = PermMat([one(T):convert(T,length(m.data))])
 one(m::PermMat) = idperm(m)
 
 ## size, copy, indexing ##
 
-getindex{T}(m::PermMat{T}, i::Integer, j::Integer) =  m.p[j] == i ? one(T) : zero(T)
+getindex{T}(m::PermMat{T}, i::Integer, j::Integer) =  m.data[j] == i ? one(T) : zero(T)
 
 function getindex{T}(m::PermMat{T}, k::Integer)
-    i,j = divrem(k-1,length(m.p))
-    return m.p[j+1] == i+1 ? one(T) : zero(T)
+    i,j = divrem(k-1,length(m.data))
+    return m.data[j+1] == i+1 ? one(T) : zero(T)
 end     
 
-size{T}(m::PermMat{T}) = (s = length(m.p); (s,s))
-copy(m::PermMat) = PermMat(copy(m.p))
+size{T}(m::PermMat{T}) = (s = length(m.data); (s,s))
+copy(m::PermMat) = PermMat(copy(m.data))
 similar(m::PermMat, atype, dims) = Array(atype, dims)
 eltype{T}(m::PermMat{T}) = T
 
@@ -40,18 +41,18 @@ full(m::PermMat) = [m[i,j] for i=1:size(m,1), j=1:size(m,2)]
 
 ## operators ##
 
-^(m::PermMat, n::Integer) = PermMat(permpower(m.p,n))
-==(m1::PermMat, m2::PermMat) = permlistisequal(m1.p,m2.p)
-<(m1::PermMat, m2::PermMat) = ltpermlist(m1.p,m2.p)
->(m1::PermMat, m2::PermMat) = ltpermlist(m2.p,m1.p)
-inv(m::PermMat) = PermMat(invperm(m.p))
-*(m::PermMat, v::String) = v[m.p]
-*(m1::PermMat, m2::PermMat) = PermMat(permcompose(m2.p,m1.p))
-/(m1::PermMat, m2::PermMat) = PermMat(permcompose(m2.p,invperm(m1.p)))
-*(m::PermMat, k::Integer) = k > length(m.p) ? k : m.p[k]
-/(k::Integer, m::PermMat) = PermPlain.preimage(m.p,k)
+^(m::PermMat, n::Integer) = PermMat(PermPlain.permpower(m.data,n))
+==(m1::PermMat, m2::PermMat) = PermPlain.permlistisequal(m1.data,m2.data)
+<(m1::PermMat, m2::PermMat) = PermPlain.ltpermlist(m1.data,m2.data)
+>(m1::PermMat, m2::PermMat) = PermPlain.ltpermlist(m2.data,m1.data)
+inv(m::PermMat) = PermMat(invperm(m.data))
+*(m::PermMat, v::String) = v[m.data]
+*(m1::PermMat, m2::PermMat) = PermMat(PermPlain.permcompose(m2.data,m1.data))
+/(m1::PermMat, m2::PermMat) = PermMat(PermPlain.permcompose(m2.data,invperm(m1.data)))
+*(m::PermMat, k::Integer) = k > length(m.data) ? k : m.data[k]
+/(k::Integer, m::PermMat) = PermPlain.preimage(m.data,k)
 \(m::PermMat, k::Int) = k / m
-#*(m::PermMat, v::Vector) = v[m.p]
+#*(m::PermMat, v::Vector) = v[m.data]
 *{T}(m::PermMat, a::AbstractVector{T}) = [ m * i for i in a]
 ctranspose(m::PermMat) = inv(m)
 transpose(m::PermMat) = inv(m)
@@ -60,7 +61,7 @@ transpose(m::PermMat) = inv(m)
 # M_1 * M_2  <---> p_2 ∘ p_1
 # We should check and follow this convention.
 function *(m1::PermMat, m2::Matrix)
-    p = m1.p
+    p = m1.data
     n = length(p)
     om = similar(m2)
     for j in 1:n
@@ -72,7 +73,7 @@ function *(m1::PermMat, m2::Matrix)
 end
 
 function *(m2::Matrix, m1::PermMat)
-    p = m1.p
+    p = m1.data
     n = length(p)
     om = similar(m2)
     for j in 1:n
@@ -89,7 +90,7 @@ for (f1,f2) in ((:order, :permorder) , (:sign, :permsgn),
                 (:cyclelengths, :cyclelengths), (:cycletype, :cycletype),
                 (:isid, :isid))
     @eval begin
-        ($f1)(m::PermMat) = (PermPlain.$f2)(m.p)
+        ($f1)(m::PermMat) = (PermPlain.$f2)(m.data)
     end
 end
 
@@ -98,6 +99,6 @@ for (f1,f2) in ((:commute, :permcommute) , (:distance, :permdistance),
                 (:greatestmoved,:greatestmoved), (:supportsize, :supportsize),
                 (:support,:support), (:fixed,:fixed))
     @eval begin
-        ($f1)(m1::PermMat, m2::PermMat) = ($f2)(m1.p,m2.p)
+        ($f1)(m1::PermMat, m2::PermMat) = (PermPlain.$f2)(m1.data,m2.data)
     end
 end
