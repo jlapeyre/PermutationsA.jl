@@ -23,17 +23,17 @@ ppow(c::PermCycs, k::Integer) = PermList(cyc_pow_perm(c.data,k))
 
 ## Convert to other representations ##
 
-# convert(::Type{PermCycs}, p::PermList) = cycles(p)
-# convert(::Type{PermList}, c::PermCycs) = list(c)
-# convert(::Type{PermList}, m::PermMat) = list(m)
-# convert(::Type{PermMat}, p::PermList) = matrix(p)
-# convert(::Type{PermMat}, c::PermCycs) = matrix(c)
+convert(::Type{PermCycs}, p::PermList) = cycles(p)
+convert(::Type{PermList}, c::PermCycs) = list(c)
+convert(::Type{PermList}, m::PermMat) = list(m)
+convert(::Type{PermMat}, p::PermList) = matrix(p)
+convert(::Type{PermMat}, c::PermCycs) = matrix(c)
 #######matrix(c::PermCycs) = matrix(permlist(c))  # inefficient
 #######matrix(p::PermList) = permtomat(p.data)
 permlist(c::PermCycs) = PermList(cycstoperm(c.data))
-# matrix(c::PermCycs) = matrix(permlist(c))  # inefficient
-# matrix(p::PermList) = PermMat(p.data)
-# matrix(m::PermMat) = m
+matrix(c::PermCycs) = matrix(permlist(c))  # inefficient
+matrix(p::PermList) = PermMat(p.data)
+matrix(m::PermMat) = m
 #######matrix(m::Array{Integer,2}) = PermMat(m * [1:size(m,1)])
 cycles(p::PermList) = PermCycs(permcycles(p.data))
 cycles(c::PermCycs) = c
@@ -44,5 +44,5 @@ list(p::PermList) = p  # not a copy !
 list(m::PermMat) = PermList(m.data)
 list(m::Array{Integer,2}) = PermList(m * [1:size(m,1)])
 
-#PermMat(p::PermList) = PermMat(p.data)
-#PermMat(c::PermCycs) = PermMat(list(c))
+PermMat(p::PermList) = PermMat(p.data)
+PermMat(c::PermCycs) = PermMat(list(c))

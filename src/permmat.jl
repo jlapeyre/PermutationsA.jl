@@ -3,7 +3,7 @@ export PermMat
 #export randpermmat, order, sign, commute, idpermmat
 
 import Base: full, getindex, size, similar, copy, eltype, ctranspose,
-             transpose
+             transpose, one
 
 # Several methods are defined in permallrep.jl, which is loaded after
 # all permutation representation objects have been defined.
@@ -16,10 +16,10 @@ end
 
 isperm(m::PermMat) = isperm(m.p)
 randpermmat(n::Integer) = PermMat(randperm(n))
-# idpermmat(n::Integer) = PermMat([1:n])
-# idpermmat(T::DataType, n::Integer) = PermMat([one(T):convert(T,n)])
-# idperm{T}(m::PermMat{T}) = PermMat([one(T):convert(T,length(m.p))])
-# one(m::PermMat) = idperm(m)
+idpermmat(n::Integer) = PermMat([1:n])
+idpermmat(T::DataType, n::Integer) = PermMat([one(T):convert(T,n)])
+idperm{T}(m::PermMat{T}) = PermMat([one(T):convert(T,length(m.p))])
+one(m::PermMat) = idperm(m)
 
 ## size, copy, indexing ##
 

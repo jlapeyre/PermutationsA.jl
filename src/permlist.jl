@@ -1,4 +1,4 @@
-import PermPlain: permlistisequal
+import Base: one
 
 export leastmoved, greatestmoved, supportsize, support, fixed, list,
        idperm
@@ -65,7 +65,7 @@ idpermlist(T::DataType, n::Integer) = PermList([one(T):convert(T,n)])
 idpermlist(p::PermList) = PermList([1:length(p.data)])
 idperm{T}(p::PermList{T}) = PermList([one(T):convert(T,length(p.data))])
 inv(p::PermList) = PermList(invperm(p.data))
-#one(p::PermList) = idperm(p)
+one(p::PermList) = idperm(p)
 
 ## Apply permutation, and permutation operations ##
 
