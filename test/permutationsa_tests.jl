@@ -122,7 +122,7 @@ end
 @test permcycs([1,2,3,4],[7,10],[9,8]) == permcycs([10,7], [1,2,3,4],[9,8])
 
 # empty permutations
-#@test permcycs() == PermCycs([])  doesn't work anymore. prbly not neccessary
+@test permcycs() == PermCycs()
 @test list(permcycs()) == permlist()
 
 @test list(permcycs([1,3],[6,4])) == PermList([3,2,1,6,5,4])
