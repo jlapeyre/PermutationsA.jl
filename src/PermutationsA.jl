@@ -1,4 +1,3 @@
-# must come first
 module PermutationsA
 
 export PermList,getindex,setindex!,cycles,cyclelengths,sign,order,
@@ -16,7 +15,7 @@ import PermPlain: cycletype, cyclelengths, permlistisequal
 
 include("permlist.jl")
 include("permcycs.jl")
-#include("permmat.jl")
+include("permmat.jl")
 include("permallrep.jl")
 
 end # module PermutationsA

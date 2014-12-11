@@ -1,6 +1,7 @@
 import PermPlain: permlistisequal
 
-export leastmoved, greatestmoved, supportsize, support, fixed, list
+export leastmoved, greatestmoved, supportsize, support, fixed, list,
+       idperm
 export randcyclelist
 export commute, isperm
 export compose!, eltype
@@ -34,16 +35,22 @@ setindex!(p::PermList, i::Int, k::Integer) = p.data[k] = i
 ## Compare, test, and/or return properties ##
 
 isperm(p::PermList) = isperm(p.data)
-function isid(pin::PermList)
-    p = pin.data
-    for i in 1:length(p)
-        i == p[i] || return false
-    end
-    return true
-end
+isid(p::PermList) = PermPlain.isid(p.data)
 commute(p::PermList,q::PermList) = permcommute(p.data,q.data)
 distance(p::PermList, q::PermList) = permdistance(p.data,q.data)
+# looks like Julia defines combinations and opposites automatically, unless otherwise defined
+
+#= 
+
+==(p::PermList, q::PermList) = (println("eq");permlistisequal(p.data,q.data)) # agrees with gap
+<(p::PermList, q::PermList) = (println("less");ltpermlist(p.data,q.data)) # agrees with pari (or was it gap?)
+<=(p::PermList, q::PermList) = (println("lesseq"); PermPlain.lepermlist(p.data,q.data)) # agrees with pari (or was it gap?)
+
+=#
+
 ==(p::PermList, q::PermList) = permlistisequal(p.data,q.data) # agrees with gap
+<(p::PermList, q::PermList) =  ltpermlist(p.data,q.data) # agrees with pari (or was it gap?)
+<=(p::PermList, q::PermList) = PermPlain.lepermlist(p.data,q.data) # agrees with pari (or was it gap?)
 sign(p::PermList) = permsgn(p.data)
 order(p::PermList) = permorder(p.data)
 cyclelengths(p::PermList) = cyclelengths(p.data)
@@ -54,7 +61,11 @@ cycletype(p::PermList) = cycletype(p.data)
 randpermlist(n::Integer) = PermList(randperm(n))
 randcyclelist(n::Integer) = PermList(randcycle(n))
 idpermlist(n::Integer) = PermList([1:n])
+idpermlist(T::DataType, n::Integer) = PermList([one(T):convert(T,n)])
+idpermlist(p::PermList) = PermList([1:length(p.data)])
+idperm{T}(p::PermList{T}) = PermList([one(T):convert(T,length(p.data))])
 inv(p::PermList) = PermList(invperm(p.data))
+#one(p::PermList) = idperm(p)
 
 ## Apply permutation, and permutation operations ##
 
@@ -75,104 +86,18 @@ compose!(p::PermList, q::PermList) = permcompose!(p.data,q.data)
 # Uing d[i] rather than p[i] is  20-30 percent faster.
 # Seems compiler is not yet smart enough to optimize this
 # preimage of k under p
-function /(k::Int, p::PermList)
-    d = p.data
-    k > length(d) && return k
-    for i in 1:length(p)
-        if d[i] == k
-            return i
-        end
-    end
-    error("Can't find inverse image of $k.")
-end
+/(k::Int, p::PermList) = PermPlain.preimage(p.data,k)
 \(p::PermList, k::Int) = k / p
 
-
 # List of points mapped to same point by p and q
-function same(pin::PermList, qin::PermList)
-    p = pin.data
-    q = qin.data
-    lp = length(p)
-    lq = length(q)
-    d = Array(eltype(pin),0)
-    if lp < lq
-        for i in 1:lp
-            p[i] == q[i] ? push!(d,p[i]) : nothing
-        end
-        for i in lp+1:lq
-            q[i] == i ? push!(d,q[i]) : nothing
-        end
-    else  # could factor code with refs, prbly not worth the trouble
-        for i in 1:lq
-            p[i] == q[i] ? push!(d,p[i]) : nothing
-        end
-        for i in lq+1:lp
-            p[i] != i ? push!(d,p[i]) : nothing
-        end
-    end
-    return d
-end
-
-# The return type depends on value of input. How to get around this ?
-# There is no integer Inf.
+same(p::PermList, q::PermList) = PermPlain.same(p.data,q.data)
 # agrees with gap (except definition,use of inifinity is different)
-function leastmoved(pin::PermList)
-    p = pin.data
-    lp = length(p)
-    lm = lp+1
-    for i in 1:lp
-        k = p[i]
-        k == i ? nothing :
-           k < lm ? lm = k : nothing
-    end
-    return lm > lp ? Inf : lm
-end
-
+leastmoved(p::PermList) = PermPlain.leastmoved(p.data)
 # agrees with gap
-function greatestmoved(pin::PermList)
-    p = pin.data
-    lp = length(p)
-    gm = 0
-    for i in 1:lp
-        k = p[i]
-        k == i ? nothing :
-           k > gm ? gm = k : nothing
-    end
-    return gm
-end
-
-function supportsize(pin::PermList)
-    p = pin.data
-    lp = length(p)
-    count = 0
-    for i in 1:lp
-        k = p[i]
-        k != i ? count += 1 : nothing
-    end
-    count
-end
-
-function support(pin::PermList)
-    p = pin.data
-    lp = length(p)
-    mov = Array(eltype(p),0)
-    for i in 1:lp
-        k = p[i]
-        k != i ? push!(mov,i) : nothing
-    end
-    return mov
-end
-
-function fixed(pin::PermList)
-    p = pin.data
-    lp = length(p)
-    fixedel = Array(eltype(p),0)
-    for i in 1:lp
-        k = p[i]
-        k == i ? push!(fixedel,i) : nothing
-    end
-    return fixedel
-end
+greatestmoved(p::PermList) = PermPlain.greatestmoved(p.data)
+supportsize(p::PermList) = PermPlain.supportsize(p.data)
+support(p::PermList) = PermPlain.support(p.data)
+fixed(p::PermList) = PermPlain.fixed(p.data)
 
 ## Output ##
 

@@ -6,7 +6,8 @@ using PermutationsA
 @test permlist(1,2,3) == permlist([1,2,3])
 
 n = 10
-c = PermList([8,2,10,4,6,9,7,3,5,1])
+c  = PermList([8,2,10,4,6,9,7,3,5,1])
+c1 = PermList([6,8,5,7,10,9,2,3,4,1])
 
 for a in (PermList([7,9,4,1,3,2,8,6,10,5]), PermList([10,1,3,6,9,8,4,5,7,2]))
     @test isperm(a)
@@ -36,9 +37,20 @@ for a in (PermList([7,9,4,1,3,2,8,6,10,5]), PermList([10,1,3,6,9,8,4,5,7,2]))
     end
 end
     
-c1 = PermList([6,8,5,7,10,9,2,3,4,1])
 @test distance(c1,c1) == 0
 @test distance(c1,inv(c1)) == 10
+@test c == c
+@test !( c != c )
+@test c != c1
+@test ! ( c < c )
+@test ! ( c > c )
+@test c >= c
+@test c <= c
+@test c > c1
+@test c1 < c
+@test c >= c1
+@test c1 <= c
+@test c1 > idperm(c1)
 
 @test idpermlist(n) == PermList([1:n])
 

@@ -1,7 +1,7 @@
 export list, flatten, support, fixed, cyclelengths
-export print,arrprint, lineprint, show
+export print,arrprint, lineprint, show, idpermcyc,  idperm
 
-import PermPlain: permsgn_from_lengths
+import PermPlain: permsgn_from_lengths, permsgn, cyclelengths
 import Base: print, show
 
 immutable PermCycs{T<:Integer}
@@ -20,7 +20,12 @@ function permcycs(cycs...)
     return pc
 end
 PermCycs() = PermCycs(Array(Array{Int,1},0))
+PermCycs{T}(::Type{T}) = PermCycs(Array(Array{T,1},0))
 permcycs() = PermCycs()
+idpermcyc() = PermCycs()
+idpermcyc{T}(::Type{T}) = PermCycs(T)
+idperm{T}(c::PermCycs{T}) = PermCycs(T)
+#one{T}(c::PermCycs{T}) = PermCycs(T)
 
 ## Copying, indexing, ... ##
 
@@ -37,9 +42,9 @@ isid(c::PermCycs) = length(c) == 0
 # commute()
 # distance()
 ==(c1::PermCycs, c2::PermCycs) = c1.data == c2.data # c1 and c2 must be in canonical order
-sign(c::PermCycs) = permsgn_from_lengths(cyclelengths(c))
+sign(c::PermCycs) = permsgn(c.data)
 order(c::PermCycs) = permorder(c.data)
-cyclelengths(c::PermCycs) = [length(c1) for c1 in c.data]
+cyclelengths(c::PermCycs) = cyclelengths(c.data)
 cycletype(c::PermCycs) = cycletype(c.data)
 
 ## Apply permutation, and permutation operations ##
