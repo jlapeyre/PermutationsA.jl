@@ -23,11 +23,11 @@ one(m::PermMat) = idperm(m)
 
 ## size, copy, indexing ##
 
-getindex{T}(m::PermMat{T}, i::Integer, j::Integer) =  m.p[i] == j ? one(T) : zero(T)
+getindex{T}(m::PermMat{T}, i::Integer, j::Integer) =  m.p[j] == i ? one(T) : zero(T)
 
 function getindex{T}(m::PermMat{T}, k::Integer)
     i,j = divrem(k-1,length(m.p))
-    return m.p[i+1] == j+1 ? one(T) : zero(T)
+    return m.p[j+1] == i+1 ? one(T) : zero(T)
 end     
 
 size{T}(m::PermMat{T}) = (s = length(m.p); (s,s))
@@ -46,8 +46,8 @@ full(m::PermMat) = [m[i,j] for i=1:size(m,1), j=1:size(m,2)]
 >(m1::PermMat, m2::PermMat) = ltpermlist(m2.p,m1.p)
 inv(m::PermMat) = PermMat(invperm(m.p))
 *(m::PermMat, v::String) = v[m.p]
-*(m1::PermMat, m2::PermMat) = PermMat(permcompose(m1.p,m2.p))
-/(m1::PermMat, m2::PermMat) = PermMat(permcompose(m1.p,invperm(m2.p)))
+*(m1::PermMat, m2::PermMat) = PermMat(permcompose(m2.p,m1.p))
+/(m1::PermMat, m2::PermMat) = PermMat(permcompose(m2.p,invperm(m1.p)))
 *(m::PermMat, k::Integer) = k > length(m.p) ? k : m.p[k]
 /(k::Integer, m::PermMat) = PermPlain.preimage(m.p,k)
 \(m::PermMat, k::Int) = k / m
