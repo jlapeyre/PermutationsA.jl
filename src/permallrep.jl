@@ -4,7 +4,7 @@ export list
 
 ## Construct objects ##
 
-randpermcycs(n::Int) = cycles(randpermlist(n))
+randpermcycs{T<:Integer}(n::T) = cycles(randpermlist(n))
 
 ## Compare, test, and/or return properties ##
 
@@ -26,11 +26,11 @@ ppow(c::PermCycs, k::Integer) = PermList(cyc_pow_perm(c.data,k))
 convert(::Type{PermCycs}, p::PermList) = cycles(p)
 convert(::Type{PermList}, c::PermCycs) = list(c)
 matrix(c::PermCycs) = matrix(permlist(c))  # inefficient
-matrix(p::PermList) = permlisttomatrix(p.data)
+matrix(p::PermList) = permtomat(p.data)
 permlist(c::PermCycs) = PermList(cycstoperm(c.data))
 cycles(p::PermList) = PermCycs(permcycles(p.data))
 cycles(c::PermCycs) = c
-cycles(m::Array{Int,2}) = cycles(list(m)) # inefficient
+cycles(m::Array{Integer,2}) = cycles(list(m)) # inefficient
 list(c::PermCycs, n=0) = PermList(cycstoperm(c.data,n))
 list(p::PermList) = p  # not a copy !
-list(m::Array{Int,2}) = PermList(m * [1:size(m,1)])
+list(m::Array{Integer,2}) = PermList(m * [1:size(m,1)])

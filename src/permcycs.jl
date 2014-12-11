@@ -8,17 +8,19 @@ immutable PermCycs{T<:Integer}
     data::Array{Array{T,1},1}
 end
 
+eltype{T}(c::PermCycs{T}) = T
+
 ## Construct PermCycs objects ##
 
 # construct permutation from list of disjoint cycles
 function permcycs(cycs...)
-    length(cycs) == 0 && return PermCycs([])
+    length(cycs) == 0 && return PermCycs()
     pc = PermCycs(canoncycles([collect(typeof(cycs[1][1]),c) for c in cycs]))
     isperm(pc) || error("Trying to construct PermCycs from illegal or non-disjoint cycles.")
     return pc
 end
-
-permcycs() = PermCycs(Array(Array{Int,1},0))
+PermCycs() = PermCycs(Array(Array{Int,1},0))
+permcycs() = PermCycs()
 
 ## Copying, indexing, ... ##
 
@@ -32,26 +34,24 @@ setindex!(c::PermCycs, ci, k) = c.data[k] = ci
 #ispermcycs(c::PermCycs) = ispermcycs(c.data) # probably not useful/wise
 isperm(c::PermCycs) = PermPlain.isperm(c.data)
 isid(c::PermCycs) = length(c) == 0
+# commute()
+# distance()
 ==(c1::PermCycs, c2::PermCycs) = c1.data == c2.data # c1 and c2 must be in canonical order
 sign(c::PermCycs) = permsgn_from_lengths(cyclelengths(c))
 order(c::PermCycs) = permorder(c.data)
-function cyclelengths(cin::PermCycs)
-    c = cin.data
-    return [ length(c1) for c1 in c]
-end
-
+cyclelengths(c::PermCycs) = [length(c1) for c1 in c.data]
+cycletype(c::PermCycs) = cycletype(c.data)
 
 ## Apply permutation, and permutation operations ##
-# ?? what is this worth ?
 getindex(v::Array, c::PermCycs) = v[list(c).data]
+getindex(v::String, c::PermCycs) = v[list(c).data] # How to define this for everything?
 
 # Whether to return as-is or sort ?
 # hmm, sort flag is overkill, since wrapping call in sort! is easy
 function flatten(c::PermCycs; sort = false ) # a bit inefficient
-    d = c.data
-    length(d) == 0 && return Array(Int,0)  # TODO: get type from d
-    outa = Array(eltype(d[1]),0)
-    for cyc in d
+    length(c) == 0 && return Array(eltype(c),0)
+    outa = Array(eltype(c),0)
+    for cyc in c.data
         append!(outa,cyc)
     end
     sort ? sort!(outa) : nothing
@@ -60,17 +60,12 @@ end
 
 # sort, to agree with PermList, and for fixed()
 support(c::PermCycs) = flatten(c,sort=true)
-
-function supportsize(c::PermCycs)
-    d = c.data
-    return sum([length(c1) for c1 in d])
-end
+supportsize(c::PermCycs) = sum([length(c1) for c1 in c.data])
 
 # must be an idiomatic way to do this
 # Not sure this is useful. fixed wrt what set ?
 function fixed(c::PermCycs)
-    d = c.data
-    outa = Array(Int,0)  # TODO: get type
+    outa = Array(eltype(c),0)
     mvd = support(c)
     ci = 1
     mi = mvd[ci]
@@ -91,9 +86,8 @@ leastmoved(cs::PermCycs) = minimum([ minimum(c) for c in cs.data ])
 ## Output ##
 
 function print(io::IO, c::PermCycs)
-    d = c.data
     print("(")
-    for cyc in d cycleprint(io, cyc) end
+    for cyc in c.data cycleprint(io, cyc) end
     print(")")    
 end
 
