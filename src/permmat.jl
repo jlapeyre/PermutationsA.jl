@@ -4,7 +4,8 @@ export randpermmat, idpermmat
 #, order, sign, commute, idpermmat
 
 import Base: full, sparse, getindex, size, similar, copy, eltype, ctranspose,
-             transpose, one
+      transpose, one, trace, det, logdet, rank, ishermitian,
+      istriu, istril, isposdef, issym, null
 
 # Several methods are defined in permallrep.jl, which is loaded after
 # all permutation representation objects have been defined.
@@ -101,7 +102,7 @@ end
 # Wikipedia says that if M_i represents p_i, then
 # M_1 * M_2  <---> p_2 ∘ p_1
 # We should check and follow this convention.
-function *(m1::PermMat, m2::Matrix)
+function *(m1::PermMat, m2::AbstractMatrix)
     p = m1.data
     n = length(p)
     om = similar(m2)
@@ -113,6 +114,8 @@ function *(m1::PermMat, m2::Matrix)
     return om
 end
 
+# can't make m2 abstract, because I get method collisions.
+# sol'n depends on whose special matrix routine should be applied.
 function *(m2::Matrix, m1::PermMat)
     p = m1.data
     n = length(p)
@@ -129,17 +132,29 @@ end
 
 for (f1,f2) in ((:order, :permorder) , (:sign, :permsgn),
                 (:cyclelengths, :cyclelengths), (:cycletype, :cycletype),
-                (:isid, :isid))
+                (:isid, :isid), (:leastmoved, :leastmoved),
+                (:greatestmoved,:greatestmoved), (:supportsize, :supportsize),
+                (:support,:support), (:fixed,:fixed))
     @eval begin
         ($f1)(m::PermMat) = (PermPlain.$f2)(m.data)
     end
 end
 
 for (f1,f2) in ((:commute, :permcommute) , (:distance, :permdistance),
-                (:same, :same), (:leastmoved, :leastmoved),
-                (:greatestmoved,:greatestmoved), (:supportsize, :supportsize),
-                (:support,:support), (:fixed,:fixed))
+                (:same, :same))
     @eval begin
         ($f1)(m1::PermMat, m2::PermMat) = (PermPlain.$f2)(m1.data,m2.data)
     end
 end
+
+trace(m::PermMat) = plength(m) - PermPlain.supportsize(m.data)
+det(m::PermMat) = permsgn(m.data) # much faster than default 'det'
+logdet(m::PermMat) = det(m) > 0 ? 0 : error("DomainError: determinant is -1")
+rank(m::PermMat) = plength(m)
+ishermitian(m::PermMat) = isid(m)
+issym(m::PermMat) = isid(m)
+istriu(m::PermMat) = isid(m)
+istril(m::PermMat) = isid(m)
+isposdef(m::PermMat) = isid(m)
+#null{T}(m::PermMat{T}) = zeros(T,plength(m),0)
+null{T}(m::PermMat{T}) = zeros(Float64,plength(m),0) # for consistency

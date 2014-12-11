@@ -18,8 +18,12 @@ distance(c1::PermCycs, c2::PermCycs) = distance(permlist(c1),permlist(c2)) # ine
 ^(c::PermCycs, k::Integer) = PermCycs(canoncycles(permpower(c.data,k)))
 ppow(c::PermCycs, k::Integer) = PermList(cyc_pow_perm(c.data,k))
 *(c1::PermCycs, c2::PermCycs) = cycles(list(c1)*list(c2)) # inefficient
-*(c::PermCycs, p::PermList) = list(c)*p # inefficient
-*(p::PermList, c::PermCycs) = p*list(c) # inefficient
+*(c::PermCycs, p::PermList) = list(c) * p # inefficient
+*(p::PermList, c::PermCycs) = p * list(c)
+*(p::PermList, m::PermMat) = p * list(m)
+*(m::PermMat, p::PermList) = m * matrix(p)
+*(m::PermMat, c::PermCycs) = m * matrix(c)
+*(c::PermCycs, m::PermMat) = c * cycles(m)
 
 ## Convert to other representations ##
 
@@ -28,13 +32,10 @@ convert(::Type{PermList}, c::PermCycs) = list(c)
 convert(::Type{PermList}, m::PermMat) = list(m)
 convert(::Type{PermMat}, p::PermList) = matrix(p)
 convert(::Type{PermMat}, c::PermCycs) = matrix(c)
-#######matrix(c::PermCycs) = matrix(permlist(c))  # inefficient
-#######matrix(p::PermList) = permtomat(p.data)
 permlist(c::PermCycs) = PermList(cycstoperm(c.data))
 matrix(c::PermCycs) = matrix(permlist(c))  # inefficient
 matrix(p::PermList) = PermMat(p.data)
 matrix(m::PermMat) = m
-#######matrix(m::Array{Integer,2}) = PermMat(m * [1:size(m,1)])
 cycles(p::PermList) = PermCycs(permcycles(p.data))
 cycles(c::PermCycs) = c
 cycles(m::PermMat) = cycles(list(m))
