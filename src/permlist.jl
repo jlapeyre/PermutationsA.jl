@@ -82,7 +82,8 @@ getindex(v::String, p::PermList) = v[p.data] # How to define this for everything
 *(p::PermList, k::Real) = k > length(p) ? k : p[k]
 *{T<:String}(p::PermList, v::T) = PermPlain.permapply(p.data,v)
   # Notice we don't restrict T., TODO: avoid deref on every iteration
-*{T}(p::PermList, a::AbstractVector{T}) = [ p * i for i in a]
+#*{T}(p::PermList, a::AbstractVector{T}) = [ p * i for i in a]
+*{T}(p::PermList, a::AbstractVector{T}) = PermPlain.permapply(p.data,a)
 *(p::PermList, q::PermList) = PermList(permcompose(p.data,q.data))
 # updating ops are "syntactic-operators". Don't know how to define method for them
 # *=(p::PermList, q::PermList) = (permcompose!(p.data,q.data), p)
@@ -96,7 +97,7 @@ compose!(p::PermList, q::PermList) = permcompose!(p.data,q.data)
 # Seems compiler is not yet smart enough to optimize this
 # preimage of k under p
 /(k::Int, p::PermList) = PermPlain.preimage(p.data,k)
-\(p::PermList, k::Int) = k / p
+#\(p::PermList, k::Int) = k / p
 
 # List of points mapped to same point by p and q
 same(p::PermList, q::PermList) = PermPlain.same(p.data,q.data)

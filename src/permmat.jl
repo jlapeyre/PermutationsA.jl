@@ -67,13 +67,14 @@ end
 >(m1::PermMat, m2::PermMat) = PermPlain.ltpermlist(m2.data,m1.data)
 inv(m::PermMat) = PermMat(invperm(m.data))
 *{T<:String}(p::PermMat, v::T) = PermPlain.permapply(p.data,v)
+#*{T}(m::PermMat, a::AbstractVector{T}) = [ m * i for i in a]
+*{T}(p::PermMat, a::AbstractVector{T}) = PermPlain.permapply(p.data,a)
 *(m1::PermMat, m2::PermMat) = PermMat(PermPlain.permcompose(m2.data,m1.data))
 /(m1::PermMat, m2::PermMat) = PermMat(PermPlain.permcompose(m2.data,invperm(m1.data)))
 *(m::PermMat, k::Integer) = k > plength(m) ? k : m.data[k]
 /(k::Integer, m::PermMat) = PermPlain.preimage(m.data,k)
-\(m::PermMat, k::Int) = k / m
 #*(m::PermMat, v::Vector) = v[m.data]
-*{T}(m::PermMat, a::AbstractVector{T}) = [ m * i for i in a]
+
 
 function ==(pm::PermMat, m::AbstractMatrix)
     (n1,n2) = size(m)

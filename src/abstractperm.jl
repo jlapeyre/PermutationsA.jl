@@ -14,6 +14,7 @@ size(m::AbstractPerm) = (s = plength(m); (s,s))
 getindex{T}(m::AbstractPerm{T}, i::Real, j::Real) =  map(m,j) == i ? one(T) : zero(T)
 # this one is called
 getindex(m::AbstractPerm, i::Real, j::Real) =  map(m,j) == i ? one(eltype(m)) : zero(eltype(m))
+\(p::AbstractPerm, k::Integer) = k / p
 
 function mkerrf()
     for sym in (:plength, :isid, :isperm, :map, :sign, :idperm )
