@@ -11,7 +11,7 @@ c1 = PermList([6,8,5,7,10,9,2,3,4,1])
 
 import Base: length
 
-for a in (PermList([7,9,4,1,3,2,8,6,10,5]), PermList([10,1,3,6,9,8,4,5,7,2]),
+for a in (PermList([10,1,3,6,9,8,4,5,7,2]),
           PermMat([10,1,3,6,9,8,4,5,7,2]), PermSparse([10,1,3,6,9,8,4,5,7,2]))
 #    println("In loop")
     @test isperm(a)
@@ -31,6 +31,8 @@ for a in (PermList([7,9,4,1,3,2,8,6,10,5]), PermList([10,1,3,6,9,8,4,5,7,2]),
     @test isid(a^-1 * a)
     @test a^-1 == inv(a)
     @test matrix(a)^order(a) == eye(Int,n)
+    @test isid( a * a')
+    @test a * "abcdefghijk" == "jacfihdegbk"
 end
 
 for a in (PermList([7,9,4,1,3,2,8,6,10,5]), PermList([10,1,3,6,9,8,4,5,7,2]),
@@ -91,15 +93,7 @@ ac1 = permcycs((1,20,4,7,18,16),(2,15,13),(3,6,10,14,5,19,8),(9,12),(11,17))
 @test permlist(cycles(a)) == a
 @test ac == copy(ac)
 
-# These are not == somehow. But the strings are.
-# Also, I still get the deprecation warning, even with the version check.
-# the version check does not work, because both branches are parsed by
-# both versions.
-#ifelse(VERSION <= v"0.4-",
-#    (println("v 3")
-#    @test string(cycletype(a)) == string(counter(Dict(7=>1,2=>2,3=>1,6=>1)))),
-#   ( println("v 4"),
-@test string(cycletype(a)) == string(counter([7=>1,2=>2,3=>1,6=>1]))
+@test collect(cycletype(a)) == collect(counter([7=>1,2=>2,3=>1,6=>1]))
 
 # Constructing this way does not check validity.
 @test isperm(PermCycs(collect(([1,2,3],[4,5,6])))) == true
@@ -123,7 +117,6 @@ a = permcycs([1,5,2,3,4],[7,9,10,8])
 @test isid(a * a^-1)
 @test isid(a * list(a)^-1)
 @test isid(list(a) * a^-1)
-# fix this, now that we allow parametric type
 @test typeof(convert(PermList,a)) == PermList{Int}
 @test typeof(convert(PermCycs,convert(PermList,a))) == PermCycs{Int}
 
@@ -138,6 +131,7 @@ for a in (permcycs([1,2,3,4],[7,10],[9,8]),permcycs([10,7], [1,2,3,4],[9,8]),
     @test a == cycles(list(a))
     @test supportsize(a) == length(support(a))
     @test supportsize(list(a)) == length(support(a))
+    @test isid( a * a')
 end
 
 # canonical ordering

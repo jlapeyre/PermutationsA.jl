@@ -37,6 +37,8 @@ support(ps::PermSparse) = collect(keys(ps.data))
 sign(ps::PermSparse) = PermPlain.permsgn_from_lengths(PermPlain.cyclelengths(ps.data))
 
 *(ps::PermSparse, k::Real) = ps[k]
+*{T<:String}(p::PermSparse, v::T) = PermPlain.permapply(p.data,v)
+*{T<:AbstractVector}(p::PermSparse, v::T) = PermPlain.permapply(p.data,v)
 /(k::Real, p::PermSparse) = PermPlain.preimage(p.data,k)
 \(p::PermSparse, k::Real) = k / p
 *(p1::PermSparse, p2::PermSparse) = PermSparse(PermPlain.permcompose(p1.data,p2.data)...)

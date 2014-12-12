@@ -66,7 +66,7 @@ end
 <(m1::PermMat, m2::PermMat) = PermPlain.ltpermlist(m1.data,m2.data)
 >(m1::PermMat, m2::PermMat) = PermPlain.ltpermlist(m2.data,m1.data)
 inv(m::PermMat) = PermMat(invperm(m.data))
-*(m::PermMat, v::String) = v[m.data]
+*{T<:String}(p::PermMat, v::T) = PermPlain.permapply(p.data,v)
 *(m1::PermMat, m2::PermMat) = PermMat(PermPlain.permcompose(m2.data,m1.data))
 /(m1::PermMat, m2::PermMat) = PermMat(PermPlain.permcompose(m2.data,invperm(m1.data)))
 *(m::PermMat, k::Integer) = k > plength(m) ? k : m.data[k]

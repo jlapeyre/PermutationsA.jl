@@ -79,7 +79,8 @@ inv(p::PermList) = PermList(invperm(p.data))
 
 getindex(v::Array, p::PermList) = v[p.data] # How to define this for everything?
 getindex(v::String, p::PermList) = v[p.data] # How to define this for everything?
-*(p::PermList, k) = k > length(p) ? k : p[k]
+*(p::PermList, k::Real) = k > length(p) ? k : p[k]
+*{T<:String}(p::PermList, v::T) = PermPlain.permapply(p.data,v)
   # Notice we don't restrict T., TODO: avoid deref on every iteration
 *{T}(p::PermList, a::AbstractVector{T}) = [ p * i for i in a]
 *(p::PermList, q::PermList) = PermList(permcompose(p.data,q.data))
