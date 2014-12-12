@@ -20,7 +20,6 @@ include("permcycs.jl")
 include("permmat.jl")
 include("permsparse.jl")
 include("permallrep.jl")
-
 end # module PermutationsA
 
 # TODO:

@@ -65,8 +65,6 @@ cycletype(p::PermList) = cycletype(p.data)
 
 ## Generate, transform  PermList objects ##
 
-
-
 randcyclelist(n::Integer) = PermList(randcycle(n))
 idpermlist(n::Integer) = PermList([1:n])
 idpermlist(T::DataType, n::Integer) = PermList([one(T):convert(T,n)])

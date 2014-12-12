@@ -5,7 +5,7 @@ export randpermmat, idpermmat
 
 import Base: full, sparse, getindex, size, similar, copy, eltype, ctranspose,
       transpose, one, trace, det, logdet, rank, ishermitian,
-      istriu, istril, isposdef, issym, null
+      istriu, istril, isposdef, issym, null, setindex!
 
 # Several methods are defined in permallrep.jl, which is loaded after
 # all permutation representation objects have been defined.
@@ -19,8 +19,10 @@ end
 isperm(m::PermMat) = isperm(m.data)
 idpermmat(n::Integer) = PermMat([1:n])
 idpermmat(T::DataType, n::Integer) = PermMat([one(T):convert(T,n)])
+
 idperm{T}(m::PermMat{T}) = PermMat([one(T):convert(T,length(m.data))])
 one(m::PermMat) = idperm(m)
+
 plength(m::PermMat) = length(m.data)
 
 ## size, copy, indexing ##
@@ -28,13 +30,14 @@ plength(m::PermMat) = length(m.data)
 #getindex{T}(m::PermMat{T}, i::Integer, j::Integer) =  m.data[j] == i ? one(T) : zero(T)
 
 # Single dimensional index means different things in different
-# contexts. Don't think we are using this anyway
+# contexts. We need to choose one meaning
 function getindex{T}(m::PermMat{T}, k::Integer)
     i,j = divrem(k-1,plength(m))
     return m.data[j+1] == i+1 ? one(T) : zero(T)
 end
-
 #getindex{T}(m::PermMat{T}, k::Integer) = k > length(m.data) ? convert(T,k) : (m.data)[k]
+
+setindex!(m::PermMat, i::Int, k::Integer) = m.data[k] = i
 
 map(m::PermMat, k::Real) = k > length(m.data) ? convert(T,k) : (m.data)[k]
 
@@ -158,5 +161,6 @@ issym(m::PermMat) = isid(m)
 istriu(m::PermMat) = isid(m)
 istril(m::PermMat) = isid(m)
 isposdef(m::PermMat) = isid(m)
-#null{T}(m::PermMat{T}) = zeros(T,plength(m),0)
 null{T}(m::PermMat{T}) = zeros(Float64,plength(m),0) # for consistency
+
+#null{T}(m::PermMat{T}) = zeros(T,plength(m),0)

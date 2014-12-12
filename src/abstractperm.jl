@@ -4,7 +4,8 @@ abstract AbstractPerm{T} <: AbstractMatrix{T}
 export plength, isid, AbstractPerm
 
 import Base: rank, sign, det, logdet, trace, ishermitian, issym, istriu,
-       istril, isposdef, null, getindex, size, transpose, ctranspose, inv, map
+       istril, isposdef, null, getindex, size, transpose, ctranspose, inv, map,
+       isperm
 
 size(m::AbstractPerm) = (s = plength(m); (s,s))
 
@@ -14,7 +15,7 @@ getindex{T}(m::AbstractPerm{T}, i::Real, j::Real) =  map(m,j) == i ? one(T) : ze
 getindex(m::AbstractPerm, i::Real, j::Real) =  map(m,j) == i ? one(eltype(m)) : zero(eltype(m))
 
 function mkerrf()
-    for sym in (:plength, :isid, :map, :sign )
+    for sym in (:plength, :isid, :isperm, :map, :sign )
         @eval begin
             ($sym)(p::AbstractPerm) = error("AbstractPerm: `", $sym , "' not defined for ", typeof(p))
         end

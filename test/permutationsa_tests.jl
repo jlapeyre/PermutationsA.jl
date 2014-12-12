@@ -9,10 +9,13 @@ n = 10
 c  = PermList([8,2,10,4,6,9,7,3,5,1])
 c1 = PermList([6,8,5,7,10,9,2,3,4,1])
 
-for a in (PermList([7,9,4,1,3,2,8,6,10,5]), PermList([10,1,3,6,9,8,4,5,7,2]))
+import Base: length
+
+for a in (PermList([7,9,4,1,3,2,8,6,10,5]), PermList([10,1,3,6,9,8,4,5,7,2]),
+          PermMat([10,1,3,6,9,8,4,5,7,2]), PermSparse([10,1,3,6,9,8,4,5,7,2]))
+#    println("In loop")
     @test isperm(a)
-    @test typeof(a) == PermList{Int}
-    @test length(a) == n
+    @test plength(a) == n
     b = copy(a)
     @test isperm(b)
     @test a == b
@@ -28,6 +31,12 @@ for a in (PermList([7,9,4,1,3,2,8,6,10,5]), PermList([10,1,3,6,9,8,4,5,7,2]))
     @test isid(a^-1 * a)
     @test a^-1 == inv(a)
     @test matrix(a)^order(a) == eye(Int,n)
+end
+
+for a in (PermList([7,9,4,1,3,2,8,6,10,5]), PermList([10,1,3,6,9,8,4,5,7,2]),
+          PermSparse([10,1,3,6,9,8,4,5,7,2]))
+    #  not true for matrix
+    @test length(a) == n
     for i in 1:n
         @test a * i == a[i]
         @test (a * i) / a == i
@@ -37,6 +46,7 @@ for a in (PermList([7,9,4,1,3,2,8,6,10,5]), PermList([10,1,3,6,9,8,4,5,7,2]))
     end
 end
     
+
 @test distance(c1,c1) == 0
 @test distance(c1,inv(c1)) == 10
 @test c == c

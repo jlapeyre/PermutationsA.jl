@@ -61,6 +61,10 @@ ppow(c::PermCycs, k::Integer) = PermList(cyc_pow_perm(c.data,k))
 *(m::PermMat, p::PermList) = m * matrix(p)
 *(m::PermMat, c::PermCycs) = m * matrix(c)
 *(c::PermCycs, m::PermMat) = c * cycles(m)
+*(p1::PermSparse, p2::PermList) = p1 * psparse(p2)
+*(p1::PermList, p2::PermSparse) = p1 * list(p2)
+*(p1::PermSparse, p2::PermMat) = p1 * psparse(p2)
+*(p1::PermMat, p2::PermSparse) = p1 * matrix(p2)
 
 ## Convert to other representations ##
 
