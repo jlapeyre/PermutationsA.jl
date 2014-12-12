@@ -1,9 +1,34 @@
 ### methods using more than one object type representing permutations
 export list, psparse
+import Base: randperm
 
 ## Construct objects ##
 
-randpermcycs{T<:Integer}(n::T) = cycles(randpermlist(n))
+
+#randperm{T<:PermMat}(::Type{T}, n::Real) = randpermmat(n)
+
+randpermlist(n::Integer) = PermList(randperm(n))
+randpermlist{T<:Real}(::Type{T}, n::Integer) = PermList(randperm(T,n))
+randperm(::Type{PermList}, n::Real) = randpermlist(n)
+randperm{T<:Real}(::Type{PermList{T}}, n::Real) = randpermlist(T,n)
+
+randpermcycs(n::Integer) = cycles(randpermlist(n))
+randpermcycs{T<:Real}(::Type{T}, n::Integer) = cycles(randpermlist(T,n))
+randperm(::Type{PermCycs}, n::Real) = randpermcycs(n)
+randperm{T<:Real}(::Type{PermCycs{T}}, n::Real) = randpermcycs(T,n)
+
+randpermmat(n::Integer) = PermMat(randperm(n))
+randpermmat{T<:Real}(::Type{T}, n::Integer) = PermMat(randpermlist(T,n))
+randperm(::Type{PermMat}, n::Real) = randpermmat(n)
+randperm{T<:Real}(::Type{PermMat{T}}, n::Real) = randpermmat(T,n)
+
+randpermsparse(n::Integer) = PermSparse(randperm(n))
+randpermsparse{T<:Real}(::Type{T}, n::Integer) = PermSparse(randpermlist(T,n).data)
+randperm(::Type{PermSparse}, n::Real) = randpermsparse(n)
+randperm{T<:Real}(::Type{PermSparse{T}}, n::Real) = randpermsparse(T,n)
+
+#randperm{T<:PermCycs}(::Type{T}, n::Real) = randpermcycs(n)
+#randperm{T<:PermSparse}(::Type{T}, n::Real) = randpermsparse(n)
 
 ## Compare, test, and/or return properties ##
 

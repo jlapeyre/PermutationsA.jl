@@ -1,7 +1,7 @@
 #abstract AbstractPerm{T} 
 abstract AbstractPerm{T} <: AbstractMatrix{T}
 
-export plength, isid
+export plength, isid, AbstractPerm
 
 import Base: rank, sign, det, logdet, trace, ishermitian, issym, istriu,
        istril, isposdef, null, getindex, size, transpose, ctranspose, inv, map

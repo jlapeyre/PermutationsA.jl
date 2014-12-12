@@ -16,7 +16,10 @@ immutable PermList{T<:Integer} <:AbstractPerm
     data::Array{T,1}
 end
 
-eltype{T}(p::PermList{T}) = T
+eltype{T}(p::PermList{T}) = (println(" permlist $T"); T)
+# does not work
+#eltype{T}(::PermList{T}) = (println(" permlist $T"); T)
+
 
 ## Construct PermList objects ##
 
@@ -62,7 +65,8 @@ cycletype(p::PermList) = cycletype(p.data)
 
 ## Generate, transform  PermList objects ##
 
-randpermlist(n::Integer) = PermList(randperm(n))
+
+
 randcyclelist(n::Integer) = PermList(randcycle(n))
 idpermlist(n::Integer) = PermList([1:n])
 idpermlist(T::DataType, n::Integer) = PermList([one(T):convert(T,n)])

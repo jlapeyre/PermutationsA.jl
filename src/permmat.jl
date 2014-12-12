@@ -17,7 +17,6 @@ immutable PermMat{T<:Real} <: AbstractPerm{T}
 end
 
 isperm(m::PermMat) = isperm(m.data)
-randpermmat(n::Integer) = PermMat(randperm(n))
 idpermmat(n::Integer) = PermMat([1:n])
 idpermmat(T::DataType, n::Integer) = PermMat([one(T):convert(T,n)])
 idperm{T}(m::PermMat{T}) = PermMat([one(T):convert(T,length(m.data))])

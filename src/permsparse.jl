@@ -18,8 +18,6 @@ end
 
 map(ps::PermSparse, k::Real) = getindex(ps,k)
 
-randpermsparse(n::Integer) = PermSparse(randperm(n))
-
 plength(ps::PermSparse) = ps.plen
 supportsize(ps::PermSparse) = length(ps.data)
 support(ps::PermSparse) = collect(keys(ps.data))

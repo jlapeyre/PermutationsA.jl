@@ -158,5 +158,15 @@ for c1 in ( permcycs((1,2), (3,4), (5,7,9,11)), permcycs((12,1,8), (3,4), (5,7,9
     @test trace(psparse(c1)) == trace(list(c1)) == trace(c1) == trace(full(matrix(c1))) == trace(sparse(matrix(c1)))
 end
 
+@test typeof(randperm(PermList,n)) == PermList{Int}
+@test typeof(randperm(PermCycs,n)) == PermCycs{Int}
+@test typeof(randperm(PermSparse,n)) == PermSparse{Int}
+@test typeof(randperm(PermMat,n)) == PermMat{Int}
+
+@test typeof(randperm(PermList{BigInt},n)) == PermList{BigInt}
+@test typeof(randperm(PermCycs{BigInt},n)) == PermCycs{BigInt}
+@test typeof(randperm(PermSparse{BigInt},n)) == PermSparse{BigInt}
+@test typeof(randperm(PermMat{BigInt},n)) == PermMat{BigInt}
+
 # fails, this is backwards
 #@test list(c1) * 7 == psparse(c1) * 7
