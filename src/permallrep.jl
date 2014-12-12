@@ -10,8 +10,19 @@ randpermcycs{T<:Integer}(n::T) = cycles(randpermlist(n))
 # Don't know which to choose
 ==(p::PermList, c::PermCycs) = p == list(c)
 ==(c::PermCycs, p::PermList) = cycles(p) == c
+
+==(p::PermList, m::PermMat) = p == list(m)
+==(m::PermMat, p::PermList) = m == matrix(p)
+
+==(p::PermList, sp::PermSparse) = p == list(sp)
+==(sp::PermSparse, p::PermList) = sp == psparse(p)
+
 ==(c::PermCycs, m::PermMat) = c == cycles(m)
 ==(m::PermMat, c::PermCycs) = m == matrix(c)
+
+==(c::PermCycs, sp::PermSparse) = c == cycles(sp)
+==(sp::PermSparse, c::PermCycs) = psparse(c) == sp
+
 distance(c1::PermCycs, c2::PermCycs) = distance(permlist(c1),permlist(c2)) # inefficient
 
 ## Apply permutation, and permutation operations ##
@@ -36,6 +47,7 @@ convert(::Type{PermMat}, c::PermCycs) = matrix(c)
 permlist(c::PermCycs) = PermList(cycstoperm(c.data))
 matrix(c::PermCycs) = matrix(permlist(c))  # inefficient
 matrix(p::PermList) = PermMat(p.data)
+matrix(sp::PermSparse) = PermMat(PermPlain.sparsetolist(sp.data))
 matrix(m::PermMat) = m
 cycles(p::PermList) = PermCycs(permcycles(p.data))
 cycles(c::PermCycs) = c
@@ -46,10 +58,13 @@ list(p::PermList) = p  # not a copy !
 list(m::PermMat) = PermList(m.data)
 #list(m::Array{Integer,2}) = PermList(m * [1:size(m,1)]) why do this ?
 list(sp::PermSparse) = PermList(PermPlain.sparsetolist(sp.data))
-cycles(sp::PermSparse) = PermCycs(PermPlain.sparsetocycles(sp.data))
+cycles(sp::PermSparse) = PermCycs(PermPlain.canoncycles(PermPlain.sparsetocycles(sp.data)))
 psparse(p::PermList) = PermSparse(p.data)
 psparse(c::PermCycs) = PermSparse(c.data)
 psparse(m::PermMat) = PermSparse(m.data)
 
 PermMat(p::PermList) = PermMat(p.data)
 PermMat(c::PermCycs) = PermMat(list(c))
+
+# This is needed to avoid trying to print PermList with showarray and failing in 1000 ways
+writemime(io::IO, ::MIME"text/plain", p::PermSparse) = print(io,cycles(p))

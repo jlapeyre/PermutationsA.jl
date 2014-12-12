@@ -144,4 +144,13 @@ end
 v = ["cat","dog","zebra"]
 @test v[PermList([1,3,2])] ==  v[cycles(PermList([1,3,2]))]
 
+c1 = permcycs( (1,2), (3,4), (5,7,9,11))
+@test c1 == psparse(c1)
+@test c1 == list(c1)
+@test c1 == matrix(c1)
+@test det(c1) == -1
+@test rank(c1) == rank(matrix(c1))
+@test rank(c1) == rank(full(matrix(c1)))
+@test full(matrix(c1)) == sparse(matrix(c1))
+
 # test compose!

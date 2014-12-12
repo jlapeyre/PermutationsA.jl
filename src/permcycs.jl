@@ -13,12 +13,19 @@ eltype{T}(c::PermCycs{T}) = T
 ## Construct PermCycs objects ##
 
 # construct permutation from list of disjoint cycles
-function permcycs(cycs...)
+#function permcycs{T}(::Type{T}, cycs...)
+function permcycs(T::Type, cycs...)
     length(cycs) == 0 && return PermCycs()
-    pc = PermCycs(canoncycles([collect(typeof(cycs[1][1]),c) for c in cycs]))
+    pc = PermCycs(PermPlain.canoncycles([collect(T,c) for c in cycs]))
     isperm(pc) || error("Trying to construct PermCycs from illegal or non-disjoint cycles.")
     return pc
 end
+
+function permcycs(cycs...)
+    length(cycs) == 0 && return PermCycs()
+    permcycs(typeof(cycs[1][1]),cycs...)
+end
+
 PermCycs() = PermCycs(Array(Array{Int,1},0))
 PermCycs{T}(::Type{T}) = PermCycs(Array(Array{T,1},0))
 permcycs() = PermCycs()
