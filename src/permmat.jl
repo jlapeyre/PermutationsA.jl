@@ -1,11 +1,10 @@
 export PermMat
 
 export randpermmat, idpermmat
-#, order, sign, commute, idpermmat
 
-import Base: full, sparse, getindex, size, similar, copy, ctranspose,
-      transpose, one, trace, det, logdet, rank, ishermitian,
-      istriu, istril, isposdef, issym, null, setindex!
+#import Base: full, sparse, getindex, size, similar, copy, ctranspose,
+#      transpose, one, trace, det, logdet, rank, ishermitian,
+#      istriu, istril, isposdef, issym, null, setindex!
 
 # Several methods are defined in permallrep.jl, which is loaded after
 # all permutation representation objects have been defined.

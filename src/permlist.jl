@@ -1,16 +1,7 @@
-import Base: one, showarray, print, show, writemime
-
-export leastmoved, greatestmoved, supportsize, support, fixed, list,
-       idperm, plength
+export PermList
+export leastmoved, greatestmoved, supportsize, support, fixed
 
 import DataStructures: list
-export randcyclelist
-export commute, isperm
-export compose!
-export print, arrprint, cycprint, show, map
-
-import Base: isperm,size, full
-#import Main:
 
 immutable PermList{T<:Real} <: AbstractPerm{T}
     data::Vector{T}
@@ -18,9 +9,6 @@ end
 
 PermList() = PermList(Int[])
 
-#eltype{T}(p::PermList{T}) = T
-# does not work
-#eltype{T}(::PermList{T}) = (println(" permlist $T"); T)
 
 ## Construct PermList objects ##
 
@@ -35,7 +23,6 @@ permlist() = PermList(Array(Int,0))
 copy(p::PermList) = PermList(copy(p.data))
 length(p::PermList) = length(p.data)
 plength(p::PermList) = length(p.data)
-
 
 # Single dimensional index means different things in different
 # contexts. We need to choose one meaning.
@@ -57,14 +44,6 @@ isid(p::PermList) = PermPlain.isid(p.data)
 commute(p::PermList,q::PermList) = PermPlain.permcommute(p.data,q.data)
 distance(p::PermList, q::PermList) = PermPlain.permdistance(p.data,q.data)
 # looks like Julia defines combinations and opposites automatically, unless otherwise defined
-
-#= 
-
-==(p::PermList, q::PermList) = (println("eq");permlistisequal(p.data,q.data)) # agrees with gap
-<(p::PermList, q::PermList) = (println("less");ltpermlist(p.data,q.data)) # agrees with pari (or was it gap?)
-<=(p::PermList, q::PermList) = (println("lesseq"); PermPlain.lepermlist(p.data,q.data)) # agrees with pari (or was it gap?)
-
-=#
 
 ==(p::PermList, q::PermList) = PermPlain.permlistisequal(p.data,q.data) # agrees with gap
 <(p::PermList, q::PermList) =  PermPlain.ltpermlist(p.data,q.data) # agrees with pari (or was it gap?)
@@ -91,8 +70,6 @@ getindex(v::Array, p::PermList) = v[p.data] # How to define this for everything?
 getindex(v::String, p::PermList) = v[p.data] # How to define this for everything?
 *(p::PermList, k::Real) = k > length(p) ? k : p[k]
 *{T<:String}(p::PermList, v::T) = PermPlain.permapply(p.data,v)
-  # Notice we don't restrict T., TODO: avoid deref on every iteration
-#*{T}(p::PermList, a::AbstractVector{T}) = [ p * i for i in a]
 *{T}(p::PermList, a::AbstractVector{T}) = PermPlain.permapply(p.data,a)
 *(p::PermList, q::PermList) = PermList(PermPlain.permcompose(p.data,q.data))
 # updating ops are "syntactic-operators". Don't know how to define method for them
