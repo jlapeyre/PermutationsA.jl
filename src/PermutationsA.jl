@@ -11,7 +11,7 @@ using PermPlain
 
 export PermCycs, randpermcycs
 
-import Base: length, sign, copy, convert
+import Base: length, sign, copy, convert, sparse, full
 
 import PermPlain: cycletype, cyclelengths, permlistisequal
 

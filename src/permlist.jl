@@ -13,8 +13,8 @@ import Base: isperm,size, full
 import Main: eltype
 
 
-immutable PermList{T<:Integer} <:AbstractPerm
-    data::Array{T,1}
+immutable PermList{T<:Real} <: AbstractPerm{T}
+    data::Vector{T}
 end
 
 PermList() = PermList(Int[])
@@ -22,7 +22,6 @@ PermList() = PermList(Int[])
 eltype{T}(p::PermList{T}) = T
 # does not work
 #eltype{T}(::PermList{T}) = (println(" permlist $T"); T)
-
 
 ## Construct PermList objects ##
 
@@ -78,6 +77,7 @@ inv(p::PermList) = PermList(invperm(p.data))
 
 ## Apply permutation, and permutation operations ##
 
+getindex{T}(v::Array{T,1},p::PermList{Bool}) = error("Silence compiler. You don't want Bool, anyway")
 getindex(v::Array, p::PermList) = v[p.data] # How to define this for everything?
 getindex(v::String, p::PermList) = v[p.data] # How to define this for everything?
 *(p::PermList, k::Real) = k > length(p) ? k : p[k]
