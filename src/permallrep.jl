@@ -1,5 +1,5 @@
 ### methods using more than one object type representing permutations
-export list, psparse
+export psparse
 import Base: randperm
 
 ## Construct objects ##
