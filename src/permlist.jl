@@ -6,11 +6,11 @@ export leastmoved, greatestmoved, supportsize, support, fixed, list,
 import DataStructures: list
 export randcyclelist
 export commute, isperm
-export compose!, eltype
+export compose!
 export print, arrprint, cycprint, show, map
 
 import Base: isperm,size, full
-import Main: eltype
+#import Main:
 
 immutable PermList{T<:Real} <: AbstractPerm{T}
     data::Vector{T}
@@ -18,7 +18,7 @@ end
 
 PermList() = PermList(Int[])
 
-eltype{T}(p::PermList{T}) = T
+#eltype{T}(p::PermList{T}) = T
 # does not work
 #eltype{T}(::PermList{T}) = (println(" permlist $T"); T)
 

@@ -1,14 +1,13 @@
 export list, flatten, support, fixed, cyclelengths
 export print,arrprint, lineprint, show, idpermcyc,  idperm, plength
 
-#import PermPlain: permsgn_from_lengths, permsgn, cyclelengths
-import Base: print, show
+#import Base: print, show
 
 immutable PermCycs{T<:Real} <: AbstractPerm{T}
     data::Array{Array{T,1},1}
 end
 
-eltype{T}(c::PermCycs{T}) = T
+
 
 ## Construct PermCycs objects ##
 

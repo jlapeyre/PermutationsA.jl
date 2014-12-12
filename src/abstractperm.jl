@@ -6,9 +6,10 @@ export plength, isid, idperm, sparse
 
 import Base: rank, sign, det, logdet, trace, ishermitian, issym, istriu,
        istril, isposdef, null, getindex,  transpose, ctranspose, inv, map,
-       isperm, one, full, sparse, size
+       isperm, one, full, sparse, size, eltype
 
 size(m::AbstractPerm) = (s = plength(m); (s,s))
+eltype{T}(c::AbstractPerm{T}) = T
 
 # this one is not called for some reason
 getindex{T}(m::AbstractPerm{T}, i::Real, j::Real) =  map(m,j) == i ? one(T) : zero(T)

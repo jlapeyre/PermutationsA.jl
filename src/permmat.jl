@@ -3,7 +3,7 @@ export PermMat
 export randpermmat, idpermmat
 #, order, sign, commute, idpermmat
 
-import Base: full, sparse, getindex, size, similar, copy, eltype, ctranspose,
+import Base: full, sparse, getindex, size, similar, copy, ctranspose,
       transpose, one, trace, det, logdet, rank, ishermitian,
       istriu, istril, isposdef, issym, null, setindex!
 
@@ -45,7 +45,7 @@ map(m::PermMat, k::Real) = k > length(m.data) ? convert(T,k) : (m.data)[k]
 
 copy(m::PermMat) = PermMat(copy(m.data))
 similar(m::PermMat, atype, dims) = Array(atype, dims)
-eltype{T}(m::PermMat{T}) = T
+#eltype{T}(m::PermMat{T}) = T
 
 ## operators ##
 
