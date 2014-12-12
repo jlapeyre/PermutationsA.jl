@@ -54,9 +54,9 @@ isid(c::PermCycs) = length(c) == 0
 # distance()
 ==(c1::PermCycs, c2::PermCycs) = c1.data == c2.data # c1 and c2 must be in canonical order
 sign(c::PermCycs) = PermPlain.permsgn(c.data)
-order(c::PermCycs) = permorder(c.data)
+order(c::PermCycs) = PermPlain.permorder(c.data)
 cyclelengths(c::PermCycs) = PermPlain.cyclelengths(c.data)
-cycletype(c::PermCycs) = cycletype(c.data)
+cycletype(c::PermCycs) = PermPlain.cycletype(c.data)
 
 ## Apply permutation, and permutation operations ##
 getindex{T}(v::Array{T,1},c::PermCycs{Bool}) = error("Silence compiler. You don't want Bool, anyway")

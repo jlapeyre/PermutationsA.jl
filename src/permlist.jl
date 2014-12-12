@@ -52,10 +52,10 @@ map{T}(p::PermList{T}, k::Real) = k > length(p.data) ? convert(T,k) : (p.data)[k
 
 ## Compare, test, and/or return properties ##
 
-isperm(p::PermList) = isperm(p.data)
+isperm(p::PermList) = PermPlain.isperm(p.data)
 isid(p::PermList) = PermPlain.isid(p.data)
-commute(p::PermList,q::PermList) = permcommute(p.data,q.data)
-distance(p::PermList, q::PermList) = permdistance(p.data,q.data)
+commute(p::PermList,q::PermList) = PermPlain.permcommute(p.data,q.data)
+distance(p::PermList, q::PermList) = PermPlain.permdistance(p.data,q.data)
 # looks like Julia defines combinations and opposites automatically, unless otherwise defined
 
 #= 
@@ -66,13 +66,13 @@ distance(p::PermList, q::PermList) = permdistance(p.data,q.data)
 
 =#
 
-==(p::PermList, q::PermList) = permlistisequal(p.data,q.data) # agrees with gap
-<(p::PermList, q::PermList) =  ltpermlist(p.data,q.data) # agrees with pari (or was it gap?)
+==(p::PermList, q::PermList) = PermPlain.permlistisequal(p.data,q.data) # agrees with gap
+<(p::PermList, q::PermList) =  PermPlain.ltpermlist(p.data,q.data) # agrees with pari (or was it gap?)
 <=(p::PermList, q::PermList) = PermPlain.lepermlist(p.data,q.data) # agrees with pari (or was it gap?)
-sign(p::PermList) = permsgn(p.data)
-order(p::PermList) = permorder(p.data)
-cyclelengths(p::PermList) = cyclelengths(p.data)
-cycletype(p::PermList) = cycletype(p.data)
+sign(p::PermList) = PermPlain.permsgn(p.data)
+order(p::PermList) = PermPlain.permorder(p.data)
+cyclelengths(p::PermList) = PermPlain.cyclelengths(p.data)
+cycletype(p::PermList) = PermPlain.cycletype(p.data)
 
 ## Generate, transform  PermList objects ##
 
@@ -94,14 +94,14 @@ getindex(v::String, p::PermList) = v[p.data] # How to define this for everything
   # Notice we don't restrict T., TODO: avoid deref on every iteration
 #*{T}(p::PermList, a::AbstractVector{T}) = [ p * i for i in a]
 *{T}(p::PermList, a::AbstractVector{T}) = PermPlain.permapply(p.data,a)
-*(p::PermList, q::PermList) = PermList(permcompose(p.data,q.data))
+*(p::PermList, q::PermList) = PermList(PermPlain.permcompose(p.data,q.data))
 # updating ops are "syntactic-operators". Don't know how to define method for them
 # *=(p::PermList, q::PermList) = (permcompose!(p.data,q.data), p)
-compose!(p::PermList, q::PermList) = permcompose!(p.data,q.data)
+compose!(p::PermList, q::PermList) = PermPlain.permcompose!(p.data,q.data)
 
 # see pari,gap for more efficient algorithm
-/(p::PermList, q::PermList) = PermList(permcompose(p.data,invperm(q.data)))
-^(p::PermList, k::Integer) = PermList(permpower(p.data,k))
+/(p::PermList, q::PermList) = PermList(PermPlain.permcompose(p.data,invperm(q.data)))
+^(p::PermList, k::Integer) = PermList(PermPlain.permpower(p.data,k))
 
 # Uing d[i] rather than p[i] is  20-30 percent faster.
 # Seems compiler is not yet smart enough to optimize this

@@ -13,7 +13,7 @@ export PermCycs, randpermcycs
 
 import Base: length, sign, copy, convert, sparse, full
 
-import PermPlain: cycletype, cyclelengths, permlistisequal
+#import PermPlain: cycletype, cyclelengths, permlistisequal
 
 include("permlist.jl")
 include("permcycs.jl")
