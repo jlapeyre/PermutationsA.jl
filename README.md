@@ -27,3 +27,6 @@ The interface is experimental, it will be pruned at least. In fact
 this is an exercise in progress. Currently, there is not a clear
 choice between using `[]` and operators to denote matrix or
 permutation operations.
+
+PermMat and PermList are very similar. One should be removed, or
+code should be factored.

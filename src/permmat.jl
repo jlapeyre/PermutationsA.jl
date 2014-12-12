@@ -47,18 +47,6 @@ copy(m::PermMat) = PermMat(copy(m.data))
 similar(m::PermMat, atype, dims) = Array(atype, dims)
 eltype{T}(m::PermMat{T}) = T
 
-# dense matrix
-full(m::PermMat) = [m[i,j] for i=1:size(m,1), j=1:size(m,2)]
-
-# sparse matrix
-function sparse{T}(m::PermMat{T})
-    n = plength(m)
-    I = [1:n]
-    J = (m.data)[I]
-    V = ones(T,n)
-    sparse(J,I,V)
-end
-
 ## operators ##
 
 ^(m::PermMat, n::Integer) = PermMat(PermPlain.permpower(m.data,n))

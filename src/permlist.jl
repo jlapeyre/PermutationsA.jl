@@ -3,14 +3,15 @@ import Base: one, showarray, print, show, writemime
 export leastmoved, greatestmoved, supportsize, support, fixed, list,
        idperm, plength
 
+import DataStructures: list
 export randcyclelist
 export commute, isperm
 export compose!, eltype
 export print, arrprint, cycprint, show, map
 
-import Base: isperm, size
+import Base: isperm,size, full
 import Main: eltype
-import DataStructures: list
+
 
 immutable PermList{T<:Integer} <:AbstractPerm
     data::Array{T,1}
@@ -18,7 +19,7 @@ end
 
 PermList() = PermList(Int[])
 
-eltype{T}(p::PermList{T}) = (println(" permlist $T"); T)
+eltype{T}(p::PermList{T}) = T
 # does not work
 #eltype{T}(::PermList{T}) = (println(" permlist $T"); T)
 
@@ -97,7 +98,6 @@ compose!(p::PermList, q::PermList) = permcompose!(p.data,q.data)
 # Seems compiler is not yet smart enough to optimize this
 # preimage of k under p
 /(k::Int, p::PermList) = PermPlain.preimage(p.data,k)
-#\(p::PermList, k::Int) = k / p
 
 # List of points mapped to same point by p and q
 same(p::PermList, q::PermList) = PermPlain.same(p.data,q.data)
