@@ -11,11 +11,14 @@ end
 PermSparse{T<:Real}(p::AbstractVector{T}) =  PermSparse(PermPlain.listtosparse(p)...)
 PermSparse{T<:Real}(cycs::AbstractArray{Array{T,1},1}) = PermSparse(PermPlain.cycstosparse(cycs)...)
 
-#PermSparse(d,p) = (ps = PermSparse; ps.data = d; ps.plen = p; ps)
+#function PermSparse{T<:Real, V<:Real}(::Type{V}, cycs::AbstractArray{Array{T,1},1})
+#    PermSparse{T}(collect(V,cycs)...)
+#end
 
 function getindex{T}(ps::PermSparse{T}, k::Real)
     res = get(ps.data,k,zero(T))
-    res == zero(T) ? convert(T,k) : res
+    res == zero(T) ? convert(T,k) : res    
+#    res == zero(T) ? convert(Array{T,1},k) : res
 end
 
 map(ps::PermSparse, k::Real) = getindex(ps,k)

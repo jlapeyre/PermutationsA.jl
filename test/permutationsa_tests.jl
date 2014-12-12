@@ -177,6 +177,4 @@ end
 @test typeof(randperm(PermCycs{BigInt},n)) == PermCycs{BigInt}
 @test typeof(randperm(PermSparse{BigInt},n)) == PermSparse{BigInt}
 @test typeof(randperm(PermMat{BigInt},n)) == PermMat{BigInt}
-
-# fails, this is backwards
-#@test list(c1) * 7 == psparse(c1) * 7
+@test list(c1) * 7 == psparse(c1) * 7
