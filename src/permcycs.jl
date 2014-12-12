@@ -21,13 +21,16 @@ function permcycs(T::Type, cycs...)
     return pc
 end
 
+PermCycs(a::Tuple) = PermCycs(PermPlain.tupcollect(a))
+PermCycs{T}(::Type{T}, a::Tuple) = PermCycs(PermPlain.tupcollect(T,a))
+
 function permcycs(cycs...)
     length(cycs) == 0 && return PermCycs()
     permcycs(typeof(cycs[1][1]),cycs...)
 end
 
 PermCycs() = PermCycs(Array(Array{Int,1},0))
-PermCycs{T}(::Type{T}) = PermCycs(Array(Array{T,1},0))
+#PermCycs{T}(::Type{T}) = PermCycs(Array(Array{T,1},0))
 permcycs() = PermCycs()
 idpermcyc() = PermCycs()
 idpermcyc{T}(::Type{T}) = PermCycs(T)

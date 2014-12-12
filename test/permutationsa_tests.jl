@@ -178,3 +178,12 @@ end
 @test typeof(randperm(PermSparse{BigInt},n)) == PermSparse{BigInt}
 @test typeof(randperm(PermMat{BigInt},n)) == PermMat{BigInt}
 @test list(c1) * 7 == psparse(c1) * 7
+
+@test (PermSparse( ( (1,2,3), (4,5) )) ; true )
+@test (PermSparse(Int32, ( (1,2,3), (4,5) )) ; true )
+@test (PermSparse(BigInt, ( (1,2,3), (4,5) )) ; true )
+@test (PermCycs( ( (1,2,3), (4,5) )) ; true )
+@test (PermCycs(Int32, ( (1,2,3), (4,5) )) ; true )
+@test (PermCycs(BigInt, ( (1,2,3), (4,5) )) ; true )
+
+@test PermSparse() == PermCycs() == PermList() == PermMat()

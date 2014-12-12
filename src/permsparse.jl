@@ -11,9 +11,9 @@ end
 PermSparse{T<:Real}(p::AbstractVector{T}) =  PermSparse(PermPlain.listtosparse(p)...)
 PermSparse{T<:Real}(cycs::AbstractArray{Array{T,1},1}) = PermSparse(PermPlain.cycstosparse(cycs)...)
 
-#function PermSparse{T<:Real, V<:Real}(::Type{V}, cycs::AbstractArray{Array{T,1},1})
-#    PermSparse{T}(collect(V,cycs)...)
-#end
+PermSparse(a::Tuple) = PermSparse(PermPlain.tupcollect(a))
+PermSparse{T}(::Type{T}, a::Tuple) = PermSparse(PermPlain.tupcollect(T,a))
+PermSparse() = PermSparse(Int[])
 
 function getindex{T}(ps::PermSparse{T}, k::Real)
     res = get(ps.data,k,zero(T))

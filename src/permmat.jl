@@ -16,6 +16,8 @@ immutable PermMat{T<:Real} <: AbstractPerm{T}
     data::Vector{T}
 end
 
+PermMat() = PermMat(Int[])
+
 isperm(m::PermMat) = isperm(m.data)
 idpermmat(n::Integer) = PermMat([1:n])
 idpermmat(T::DataType, n::Integer) = PermMat([one(T):convert(T,n)])

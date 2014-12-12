@@ -16,6 +16,8 @@ immutable PermList{T<:Integer} <:AbstractPerm
     data::Array{T,1}
 end
 
+PermList() = PermList(Int[])
+
 eltype{T}(p::PermList{T}) = (println(" permlist $T"); T)
 # does not work
 #eltype{T}(::PermList{T}) = (println(" permlist $T"); T)
