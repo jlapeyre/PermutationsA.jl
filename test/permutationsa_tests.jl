@@ -35,6 +35,9 @@ for a in (PermList([10,1,3,6,9,8,4,5,7,2]),
     @test a * "abcdefghijk" == "jacfihdegbk"
 end
 
+@test (c * eye(Int,n)) * (c' * eye(Int,n)) == eye(Int,n)
+#@test c * eye(Int,n) * c' == eye(Int,n)
+
 @test sparse(PermList([3,5,6,1,2,4])) == sparse(PermSparse([3,5,6,1,2,4])) == sparse(PermMat([3,5,6,1,2,4]))
 
 for a in (PermList([7,9,4,1,3,2,8,6,10,5]), PermList([10,1,3,6,9,8,4,5,7,2]),

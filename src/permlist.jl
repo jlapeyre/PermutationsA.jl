@@ -35,10 +35,20 @@ permlist() = PermList(Array(Int,0))
 copy(p::PermList) = PermList(copy(p.data))
 length(p::PermList) = length(p.data)
 plength(p::PermList) = length(p.data)
-getindex(p::PermList, k::Real) = p.data[k]
-setindex!(p::PermList, i::Int, k::Integer) = p.data[k] = i
-map{T}(p::PermList{T}, k::Real) = k > length(p.data) ? convert(T,k) : (p.data)[k]
 
+
+# Single dimensional index means different things in different
+# contexts. We need to choose one meaning.
+# This is for accessing the matrix elements as a 'virtual' 1d array.
+#function getindex{T}(m::PermList{T}, k::Integer)
+#    i,j = divrem(k-1,plength(m))
+#    return m.data[j+1] == i+1 ? one(T) : zero(T)
+#end
+#getindex{T}(m::PermMat{T}, k::Integer) = k > length(m.data) ? convert(T,k) : (m.data)[k]
+
+setindex!(p::PermList, i::Int, k::Integer) = p.data[k] = i
+getindex{T}(p::PermList{T}, k::Real) = k > length(p.data) ? convert(T,k) : (p.data)[k]
+map{T}(p::PermList{T}, k::Real) = k > length(p.data) ? convert(T,k) : (p.data)[k]
 
 ## Compare, test, and/or return properties ##
 
@@ -127,3 +137,63 @@ show(io::IO, p::PermList) = print(io,p)
 show(p::PermList) = print(p)
 # This is needed to avoid trying to print PermList with showarray and failing in 1000 ways
 writemime(io::IO, ::MIME"text/plain", p::PermList) = print(io,p)
+
+function ==(pm::PermList, m::AbstractMatrix)
+    (n1,n2) = size(m)
+    d = pm.data
+    n1 == n2 || return false
+    for j in 1:n1
+        for i in 1:n1
+            val = m[i,j]
+            if val != 0
+                ((val == 1 && d[j] == i) || return false)
+            end
+        end
+    end
+    return true
+end
+
+# could factor this code somehow
+function ==(m::AbstractMatrix, pm::PermList)
+    (n1,n2) = size(m)
+    d = pm.data
+    n1 == n2 || return false
+    for j in 1:n1
+        for i in 1:n1
+            val = m[i,j]
+            if val != 0
+                ((val == 1 && d[j] == i) || return false)
+            end
+        end
+    end
+    return true
+end
+
+# Wikipedia says that if M_i represents p_i, then
+# M_1 * M_2  <---> p_2 ∘ p_1
+# We should check and follow this convention.
+function *(m1::PermList, m2::AbstractMatrix)
+    p = m1.data
+    n = length(p)
+    om = zeros(m2)
+    for j in 1:n
+        for i in 1:n
+            om[i,j] = m2[i,p[j]]
+        end
+    end
+    return om
+end
+
+# can't make m2 abstract, because I get method collisions.
+# sol'n depends on whose special matrix routine should be applied.
+function *(m2::Matrix, m1::PermList)
+    p = m1.data
+    n = length(p)
+    om = zeros(m2)
+    for j in 1:n
+        for i in 1:n
+            om[i,j] = m2[p[i],j]
+        end
+    end
+    return om
+end
