@@ -144,13 +144,19 @@ end
 v = ["cat","dog","zebra"]
 @test v[PermList([1,3,2])] ==  v[cycles(PermList([1,3,2]))]
 
-c1 = permcycs( (1,2), (3,4), (5,7,9,11))
-@test c1 == psparse(c1)
-@test c1 == list(c1)
-@test c1 == matrix(c1)
-@test det(c1) == -1
-@test rank(c1) == rank(matrix(c1))
-@test rank(c1) == rank(full(matrix(c1)))
-@test full(matrix(c1)) == sparse(matrix(c1))
+for c1 in ( permcycs((1,2), (3,4), (5,7,9,11)), permcycs((12,1,8), (3,4), (5,7,9,11)) )
+    @test c1 == psparse(c1)
+    @test c1 == list(c1)
+    @test c1 == matrix(c1)
+    @test det(c1) == sign(c1)
+    @test rank(c1) == rank(matrix(c1))
+    @test rank(c1) == rank(full(matrix(c1)))
+    @test full(matrix(c1)) == sparse(matrix(c1))
+    @test sign(psparse(c1)) == sign(list(c1)) == sign(c1) == sign(matrix(c1))
+    @test plength(psparse(c1)) == plength(list(c1)) == plength(c1) == plength(matrix(c1))
+    @test null(psparse(c1)) == null(list(c1)) == null(c1) == null(full(matrix(c1)))
+    @test trace(psparse(c1)) == trace(list(c1)) == trace(c1) == trace(full(matrix(c1))) == trace(sparse(matrix(c1)))
+end
 
-# test compose!
+# fails, this is backwards
+#@test list(c1) * 7 == psparse(c1) * 7
