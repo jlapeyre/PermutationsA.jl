@@ -23,7 +23,7 @@ idpermmat(n::Integer) = PermMat([1:n])
 idpermmat(T::DataType, n::Integer) = PermMat([one(T):convert(T,n)])
 
 idperm{T}(m::PermMat{T}) = PermMat([one(T):convert(T,length(m.data))])
-one(m::PermMat) = idperm(m)
+#one(m::PermMat) = idperm(m)
 
 plength(m::PermMat) = length(m.data)
 
@@ -153,16 +153,3 @@ for (f1,f2) in ((:commute, :permcommute) , (:distance, :permdistance),
         ($f1)(m1::PermMat, m2::PermMat) = (PermPlain.$f2)(m1.data,m2.data)
     end
 end
-
-trace(m::PermMat) = plength(m) - PermPlain.supportsize(m.data)
-det(m::PermMat) = permsgn(m.data) # much faster than default 'det'
-logdet(m::PermMat) = det(m) > 0 ? 0 : error("DomainError: determinant is -1")
-rank(m::PermMat) = plength(m)
-ishermitian(m::PermMat) = isid(m)
-issym(m::PermMat) = isid(m)
-istriu(m::PermMat) = isid(m)
-istril(m::PermMat) = isid(m)
-isposdef(m::PermMat) = isid(m)
-null{T}(m::PermMat{T}) = zeros(Float64,plength(m),0) # for consistency
-
-#null{T}(m::PermMat{T}) = zeros(T,plength(m),0)

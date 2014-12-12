@@ -35,7 +35,7 @@ permcycs() = PermCycs()
 idpermcyc() = PermCycs()
 idpermcyc{T}(::Type{T}) = PermCycs(T)
 idperm{T}(c::PermCycs{T}) = PermCycs(T)
-one{T}(c::PermCycs{T}) = PermCycs(T)
+#one{T}(c::PermCycs{T}) = PermCycs(T)
 plength(c::PermCycs) = greatestmoved(c)
 
 ## Copying, indexing, ... ##
