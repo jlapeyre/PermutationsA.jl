@@ -1,7 +1,8 @@
 export PermSparse
-export randpermsparse, plength, supportsize
+export randpermsparse
+#, plength, supportsize
 
-import Base: getindex, sign, length
+#import Base: getindex, sign, length
 
 immutable PermSparse{T<:Real} <: AbstractPerm{T}
     data::Dict{T}

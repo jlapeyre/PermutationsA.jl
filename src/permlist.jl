@@ -12,7 +12,6 @@ export print, arrprint, cycprint, show, map
 import Base: isperm,size, full
 import Main: eltype
 
-
 immutable PermList{T<:Real} <: AbstractPerm{T}
     data::Vector{T}
 end
