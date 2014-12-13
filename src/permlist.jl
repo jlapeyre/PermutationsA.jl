@@ -113,36 +113,21 @@ show(p::PermList) = print(p)
 # This is needed to avoid trying to print PermList with showarray and failing in 1000 ways
 writemime(io::IO, ::MIME"text/plain", p::PermList) = print(io,p)
 
-function ==(pm::PermList, m::AbstractMatrix)
-    (n1,n2) = size(m)
-    d = pm.data
-    n1 == n2 || return false
-    for j in 1:n1
-        for i in 1:n1
-            val = m[i,j]
-            if val != 0
-                ((val == 1 && d[j] == i) || return false)
-            end
-        end
-    end
-    return true
-end
+# function ==(pm::PermList, m::AbstractMatrix)
+#     (n1,n2) = size(m)
+#     d = pm.data
+#     n1 == n2 || return false
+#     for j in 1:n1
+#         for i in 1:n1
+#             val = m[i,j]
+#             if val != 0
+#                 ((val == 1 && d[j] == i) || return false)
+#             end
+#         end
+#     end
+#     return true
+# end
 
-# could factor this code somehow
-function ==(m::AbstractMatrix, pm::PermList)
-    (n1,n2) = size(m)
-    d = pm.data
-    n1 == n2 || return false
-    for j in 1:n1
-        for i in 1:n1
-            val = m[i,j]
-            if val != 0
-                ((val == 1 && d[j] == i) || return false)
-            end
-        end
-    end
-    return true
-end
 
 # Wikipedia says that if M_i represents p_i, then
 # M_1 * M_2  <---> p_2 ∘ p_1

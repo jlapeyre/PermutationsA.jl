@@ -1,5 +1,5 @@
 using Base.Test
-using DataStructures
+#using DataStructures
 using PermutationsA
 
 # is this a good idea ?
@@ -33,6 +33,10 @@ for a in (PermList([10,1,3,6,9,8,4,5,7,2]),
     @test matrix(a)^order(a) == eye(Int,n)
     @test isid( a * a')
     @test a * "abcdefghijk" == "jacfihdegbk"
+    @test sparse(a) == a == full(a)
+    @test full(a) == a == sparse(a)
+    @test eye(a) != a
+    @test a != eye(a)
 end
 
 @test (c * eye(Int,n)) * (c' * eye(Int,n)) == eye(Int,n)
@@ -70,7 +74,6 @@ end
 @test c1 > idperm(c1)
 
 @test idpermlist(n) == PermList([1:n])
-
 
 # This is ok, but trans is broken in general
 #@test sign(a) == (-1)^length(trans(a))

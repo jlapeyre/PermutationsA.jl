@@ -92,6 +92,65 @@ psparse(m::PermMat) = PermSparse(m.data)
 PermMat(p::PermList) = PermMat(p.data)
 PermMat(c::PermCycs) = PermMat(list(c))
 
+function ==(pm::Union(PermList,PermMat), m::AbstractMatrix)
+    (n1,n2) = size(m)
+    d = pm.data
+    n1 == n2 || return false
+    for j in 1:n1
+        for i in 1:n1
+            val = m[i,j]
+            if val != 0
+                ((val == 1 && d[j] == i) || return false)
+            end
+        end
+    end
+    return true
+end
+
+function ==(pm::PermSparse, m::AbstractMatrix)
+    (n1,n2) = size(m)
+    n1 == n2 || return false
+    for j in 1:n1
+        for i in 1:n1
+            val = m[i,j]
+            if val != 0
+                ((val == 1 && pm[j] == i) || return false)
+            end
+        end
+    end
+    return true
+end
+
+# would like AbstractMatrix, but causes ambiguity
+function ==(m::Union(Matrix,SparseMatrixCSC), pm::Union(PermList,PermMat))
+    (n1,n2) = size(m)
+    d = pm.data
+    n1 == n2 || return false
+    for j in 1:n1
+        for i in 1:n1
+            val = m[i,j]
+            if val != 0
+                ((val == 1 && d[j] == i) || return false)
+            end
+        end
+    end
+    return true
+end
+
+function ==(m::Union(Matrix,SparseMatrixCSC), pm::PermSparse)
+    (n1,n2) = size(m)
+    n1 == n2 || return false
+    for j in 1:n1
+        for i in 1:n1
+            val = m[i,j]
+            if val != 0
+                ((val == 1 && pm[j] == i) || return false)
+            end
+        end
+    end
+    return true
+end
+
 # This is needed to avoid trying to print PermList with showarray and failing in 1000 ways
 writemime(io::IO, ::MIME"text/plain", p::PermSparse) = print(io,cycles(p))
 
