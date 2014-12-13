@@ -12,7 +12,8 @@ c1 = PermList([6,8,5,7,10,9,2,3,4,1])
 import Base: length
 
 for a in (PermList([10,1,3,6,9,8,4,5,7,2]),
-          PermMat([10,1,3,6,9,8,4,5,7,2]), PermSparse([10,1,3,6,9,8,4,5,7,2]))
+#          PermMat([10,1,3,6,9,8,4,5,7,2]),
+          PermSparse([10,1,3,6,9,8,4,5,7,2]))
 #    println("In loop")
     @test isperm(a)
     @test plength(a) == n
@@ -42,7 +43,7 @@ end
 @test (c * eye(Int,n)) * (c' * eye(Int,n)) == eye(Int,n)
 #@test c * eye(Int,n) * c' == eye(Int,n)
 
-@test sparse(PermList([3,5,6,1,2,4])) == sparse(PermSparse([3,5,6,1,2,4])) == sparse(PermMat([3,5,6,1,2,4]))
+@test sparse(PermList([3,5,6,1,2,4])) == sparse(PermSparse([3,5,6,1,2,4]))
 
 for a in (PermList([7,9,4,1,3,2,8,6,10,5]), PermList([10,1,3,6,9,8,4,5,7,2]),
           PermSparse([10,1,3,6,9,8,4,5,7,2]))
@@ -81,10 +82,10 @@ end
 
 p = PermList([3,2,4,10,1,6,5,8,7,9])
 q = PermList([3,8,4,9,7,6,1,10,5,2])
-P = matrix(p)
-Q = matrix(q)
-@test Q*P == matrix(p*q)
-@test P' == matrix(inv(p))
+#P = matrix(p)
+#Q = matrix(q)
+#@test q * p == matrix(p*q)
+@test p' == inv(p)
 
 a = PermList([20,15,6,7,19,10,18,3,12,14,17,9,2,5,13,1,11,16,8,4])
 a1 = permlist(20,15,6,7,19,10,18,3,12,14,17,9,2,5,13,1,11,16,8,4)
@@ -159,26 +160,25 @@ v = ["cat","dog","zebra"]
 for c1 in ( permcycs((1,2), (3,4), (5,7,9,11)), permcycs((12,1,8), (3,4), (5,7,9,11)) )
     @test c1 == psparse(c1)
     @test c1 == list(c1)
-    @test c1 == matrix(c1)
+#    @test c1 == matrix(c1)
     @test det(c1) == sign(c1)
-    @test rank(c1) == rank(matrix(c1))
-    @test rank(c1) == rank(full(matrix(c1)))
-    @test full(matrix(c1)) == sparse(matrix(c1))
-    @test sign(psparse(c1)) == sign(list(c1)) == sign(c1) == sign(matrix(c1))
-    @test plength(psparse(c1)) == plength(list(c1)) == plength(c1) == plength(matrix(c1))
-    @test null(psparse(c1)) == null(list(c1)) == null(c1) == null(full(matrix(c1)))
-    @test trace(psparse(c1)) == trace(list(c1)) == trace(c1) == trace(full(matrix(c1))) == trace(sparse(matrix(c1)))
+    @test rank(c1) == rank(full(c1))
+    @test full(c1) == sparse(c1)
+    @test sign(psparse(c1)) == sign(list(c1)) == sign(c1)
+    @test plength(psparse(c1)) == plength(list(c1)) == plength(c1)
+    @test null(psparse(c1)) == null(list(c1)) == null(c1) == null(full(c1))
+    @test trace(psparse(c1)) == trace(list(c1)) == trace(c1) == trace(full(c1)) == trace(sparse(c1))
 end
 
 @test typeof(randperm(PermList,n)) == PermList{Int}
 @test typeof(randperm(PermCycs,n)) == PermCycs{Int}
 @test typeof(randperm(PermSparse,n)) == PermSparse{Int}
-@test typeof(randperm(PermMat,n)) == PermMat{Int}
+#@test typeof(randperm(PermMat,n)) == PermMat{Int}
 
 @test typeof(randperm(PermList{BigInt},n)) == PermList{BigInt}
 @test typeof(randperm(PermCycs{BigInt},n)) == PermCycs{BigInt}
 @test typeof(randperm(PermSparse{BigInt},n)) == PermSparse{BigInt}
-@test typeof(randperm(PermMat{BigInt},n)) == PermMat{BigInt}
+#@test typeof(randperm(PermMat{BigInt},n)) == PermMat{BigInt}
 @test list(c1) * 7 == psparse(c1) * 7
 
 @test (PermSparse( ( (1,2,3), (4,5) )) ; true )
@@ -188,6 +188,6 @@ end
 @test (PermCycs(Int32, ( (1,2,3), (4,5) )) ; true )
 @test (PermCycs(BigInt, ( (1,2,3), (4,5) )) ; true )
 
-@test PermSparse() == PermCycs() == PermList() == PermMat()
+@test PermSparse() == PermCycs() == PermList()
 @test PermList([1:10]) == PermList([1:20])
 
