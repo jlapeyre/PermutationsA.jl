@@ -21,7 +21,7 @@ The remaining types differ in how they store the data representing the permutati
 *  ```PermList``` is an ```Array{T,1}``` corresponding to the one-line form
 *  ```PermCyc``` is an ```Array{Array{T,1},}``` corresponding to disjoint-cycle form
 *  ```PermMat``` is a ```Matrix``` that stores the data in one-line form ```Array{T,1}```
-*  ```PermSparse``` is a ```Dict``` which can be thought of as one-line form with fixed points ommitted
+*  ```PermSparse``` is a ```Dict``` which can be thought of as one-line form with fixed points omitted
 
 The interface is experimental, it will be pruned at least. In fact
 this is an exercise in progress. Currently, there is not a clear
@@ -30,3 +30,10 @@ permutation operations.
 
 PermMat and PermList are very similar. One should be removed, or
 code should be factored.
+
+<!--  LocalWords:  PermutationsA PermuationsA PermPlain julia PermCyc
+ -->
+<!--  LocalWords:  AbstractPerm AbstractMatrix PermList PermMat
+ -->
+<!--  LocalWords:  PermSparse
+ -->
