@@ -9,7 +9,6 @@ end
 
 PermList() = PermList(Int[])
 
-
 ## Construct PermList objects ##
 
 # maybe check validity, make less generic methods for efficiency
@@ -39,19 +38,9 @@ map{T}(p::PermList{T}, k::Real) = k > length(p.data) ? convert(T,k) : (p.data)[k
 
 ## Compare, test, and/or return properties ##
 
-#isperm(p::PermList) = PermPlain.isperm(p.data)
-#isid(p::PermList) = PermPlain.isid(p.data)
-#commute(p::PermList,q::PermList) = PermPlain.permcommute(p.data,q.data)
-#distance(p::PermList, q::PermList) = PermPlain.permdistance(p.data,q.data)
-# looks like Julia defines combinations and opposites automatically, unless otherwise defined
-
 ==(p::PermList, q::PermList) = PermPlain.permlistisequal(p.data,q.data) # agrees with gap
 <(p::PermList, q::PermList) =  PermPlain.ltpermlist(p.data,q.data) # agrees with pari (or was it gap?)
 <=(p::PermList, q::PermList) = PermPlain.lepermlist(p.data,q.data) # agrees with pari (or was it gap?)
-#sign(p::PermList) = PermPlain.permsgn(p.data)
-#order(p::PermList) = PermPlain.permorder(p.data)
-#cyclelengths(p::PermList) = PermPlain.cyclelengths(p.data)
-#cycletype(p::PermList) = PermPlain.cycletype(p.data)
 
 ## Generate, transform  PermList objects ##
 
@@ -61,7 +50,6 @@ idpermlist(T::DataType, n::Integer) = PermList([one(T):convert(T,n)])
 idpermlist(p::PermList) = PermList([1:length(p.data)])
 idperm{T}(p::PermList{T}) = PermList([one(T):convert(T,length(p.data))])
 inv(p::PermList) = PermList(invperm(p.data))
-#one(p::PermList) = idperm(p)
 
 ## Apply permutation, and permutation operations ##
 
@@ -80,20 +68,8 @@ compose!(p::PermList, q::PermList) = PermPlain.permcompose!(p.data,q.data)
 /(p::PermList, q::PermList) = PermList(PermPlain.permcompose(p.data,invperm(q.data)))
 ^(p::PermList, k::Integer) = PermList(PermPlain.permpower(p.data,k))
 
-# Uing d[i] rather than p[i] is  20-30 percent faster.
-# Seems compiler is not yet smart enough to optimize this
 # preimage of k under p
 /(k::Int, p::PermList) = PermPlain.preimage(p.data,k)
-
-# List of points mapped to same point by p and q
-#same(p::PermList, q::PermList) = PermPlain.same(p.data,q.data)
-# agrees with gap (except definition,use of inifinity is different)
-#leastmoved(p::PermList) = PermPlain.leastmoved(p.data)
-# agrees with gap
-#greatestmoved(p::PermList) = PermPlain.greatestmoved(p.data)
-#supportsize(p::PermList) = PermPlain.supportsize(p.data)
-#support(p::PermList) = PermPlain.support(p.data)
-#fixed(p::PermList) = PermPlain.fixed(p.data)
 
 ## Output ##
 
@@ -126,7 +102,7 @@ for (f1,f2) in ((:order, :permorder) , (:sign, :permsgn),
 end
 
 for (f1,f2) in ((:commute, :permcommute) , (:distance, :permdistance),
-                (:same, :same))
+                (:same, :same), (:inv , :invperm) )
     @eval begin
         ($f1)(m1::PermList, m2::PermList) = (PermPlain.$f2)(m1.data,m2.data)
     end
