@@ -189,3 +189,5 @@ end
 @test (PermCycs(BigInt, ( (1,2,3), (4,5) )) ; true )
 
 @test PermSparse() == PermCycs() == PermList() == PermMat()
+@test PermList([1:10]) == PermList([1:20])
+
