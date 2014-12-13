@@ -101,12 +101,6 @@ function print(io::IO, c::PermCycs)
     print(")")    
 end
 
-aprint(io::IO, c::PermCycs) = arrprint(io,list(c))
-aprint(c::PermCycs) = arrprint(STDOUT,c)
-cprint(c::PermCycs) = print(c)
-cprint(io::IO,c::PermCycs) = print(io,c)
-lineprint(io::IO, c::PermCycs) = print(io,list(c))
-lineprint(c::PermCycs) = lineprint(STDOUT,c)
 show(io::IO, c::PermCycs) = print(io,c)
 # This is needed to avoid trying to print PermList with showarray and failing in 1000 ways
 writemime(io::IO, ::MIME"text/plain", p::PermCycs) = print(io,p)

@@ -2,6 +2,7 @@ module PermutationsA
 
 export permlist, order, idpermlist, matrix, distance, permcycs
 export cycles, cycletype, cyclelengths
+export cprint, lprint, aprint, mprint
 
 using PermPlain
 import Base: length, sign, copy, convert, sparse, full

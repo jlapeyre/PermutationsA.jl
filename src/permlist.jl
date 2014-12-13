@@ -98,18 +98,16 @@ fixed(p::PermList) = PermPlain.fixed(p.data)
 ## Output ##
 
  # How to use keyword arguments?
-function arrprint(io::IO, p::PermList)
-    permarrprint(io,p.data)
+function aprint(io::IO, p::PermList)
+    PermPlain.permarrprint(io,p.data)
     println(io)
-    permarrprint(io,[1:length(p.data)])
+    PermPlain.permarrprint(io,[1:length(p.data)])
 end
 
-arrprint(p::PermList) = arrprint(STDOUT,p)
-cycprint(io::IO,p::PermList) = print(io,cycles(p))
-cycprint(p::PermList) = cycprint(STDOUT,p)
-print(io::IO, p::PermList) = permarrprint(io,p.data)
-lineprint(io::IO, p::PermList) = print(io,p)
-lineprint(p::PermList) = lineprint(STDOUT,p)
+aprint(p::PermList) = aprint(STDOUT,p)
+print(io::IO, p::PermList) = PermPlain.permarrprint(io,p.data)
+lprint(io::IO, p::PermList) = print(io,p)
+lprint(p::PermList) = lprint(STDOUT,p)
 show(io::IO, p::PermList) = print(io,p)
 show(p::PermList) = print(p)
 # This is needed to avoid trying to print PermList with showarray and failing in 1000 ways

@@ -94,3 +94,26 @@ PermMat(c::PermCycs) = PermMat(list(c))
 
 # This is needed to avoid trying to print PermList with showarray and failing in 1000 ways
 writemime(io::IO, ::MIME"text/plain", p::PermSparse) = print(io,cycles(p))
+
+aprint(io::IO, c::PermCycs) = aprint(io,list(c))
+aprint(c::PermCycs) = aprint(STDOUT,c)
+aprint(io::IO,p::PermSparse) = aprint(io,list(p))
+aprint(p::PermSparse) = aprint(STDOUT,p)
+
+cprint(c::PermCycs) = print(c)
+cprint(io::IO,c::PermCycs) = print(io,c)
+cprint(io::IO,p::PermList) = print(io,cycles(p))
+cprint(p::PermList) = cprint(STDOUT,p)
+cprint(io::IO,p::PermSparse) = print(io,cycles(p))
+cprint(p::PermSparse) = cprint(STDOUT,p)
+
+lprint(io::IO,p::PermSparse) = lprint(io,list(p))
+lprint(p::PermSparse) = lprint(STDOUT,p)
+lprint(io::IO, c::PermCycs) = print(io,list(c))
+lprint(c::PermCycs) = lprint(STDOUT,c)
+lprint(io::IO, p::PermList) = print(io,p)
+lprint(p::PermList) = lprint(STDOUT,p)
+
+# stopgap
+mprint(io::IO,p::AbstractPerm) = print(full(p))
+mprint(p::AbstractPerm) = mprint(STDOUT,p)
