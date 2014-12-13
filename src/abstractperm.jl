@@ -1,4 +1,3 @@
-#abstract AbstractPerm{T} 
 abstract AbstractPerm{T} <: AbstractMatrix{T}
 
 export AbstractPerm
@@ -54,5 +53,4 @@ issym(p::AbstractPerm) = isid(p)
 istriu(p::AbstractPerm) = isid(p)
 istril(p::AbstractPerm) = isid(p)
 isposdef(p::AbstractPerm) = isid(p)
-# can't use {T} in these or they are not found.
 null(p::AbstractPerm) = zeros(Float64,plength(p),0) # for consistency

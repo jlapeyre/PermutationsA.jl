@@ -4,9 +4,6 @@ import Base: randperm
 
 ## Construct objects ##
 
-
-#randperm{T<:PermMat}(::Type{T}, n::Real) = randpermmat(n)
-
 randpermlist(n::Integer) = PermList(randperm(n))
 randpermlist{T<:Real}(::Type{T}, n::Integer) = PermList(randperm(T,n))
 randperm(::Type{PermList}, n::Real) = randpermlist(n)
@@ -26,9 +23,6 @@ randpermsparse(n::Integer) = PermSparse(randperm(n))
 randpermsparse{T<:Real}(::Type{T}, n::Integer) = PermSparse(randpermlist(T,n).data)
 randperm(::Type{PermSparse}, n::Real) = randpermsparse(n)
 randperm{T<:Real}(::Type{PermSparse{T}}, n::Real) = randpermsparse(T,n)
-
-#randperm{T<:PermCycs}(::Type{T}, n::Real) = randpermcycs(n)
-#randperm{T<:PermSparse}(::Type{T}, n::Real) = randpermsparse(n)
 
 ## Compare, test, and/or return properties ##
 

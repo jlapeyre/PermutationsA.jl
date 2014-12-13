@@ -36,7 +36,6 @@ plength(c::PermCycs) = greatestmoved(c)
 
 copy(c::PermCycs) = PermCycs(copy(c.data))
 length(c::PermCycs) = length(c.data)
-# this is not useful... or ... hmmmm
 getindex(c::PermCycs, k::Real) = c.data[k]
 setindex!(c::PermCycs, ci::Real, k::Real) = c.data[k] = ci
 

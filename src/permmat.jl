@@ -2,13 +2,6 @@ export PermMat
 
 export randpermmat, idpermmat
 
-#import Base: full, sparse, getindex, size, similar, copy, ctranspose,
-#      transpose, one, trace, det, logdet, rank, ishermitian,
-#      istriu, istril, isposdef, issym, null, setindex!
-
-# Several methods are defined in permallrep.jl, which is loaded after
-# all permutation representation objects have been defined.
-
 ## object and constructors  ##
 
 immutable PermMat{T<:Real} <: AbstractPerm{T}
@@ -22,13 +15,10 @@ idpermmat(n::Integer) = PermMat([1:n])
 idpermmat(T::DataType, n::Integer) = PermMat([one(T):convert(T,n)])
 
 idperm{T}(m::PermMat{T}) = PermMat([one(T):convert(T,length(m.data))])
-#one(m::PermMat) = idperm(m)
 
 plength(m::PermMat) = length(m.data)
 
 ## size, copy, indexing ##
-
-#getindex{T}(m::PermMat{T}, i::Integer, j::Integer) =  m.data[j] == i ? one(T) : zero(T)
 
 # Single dimensional index means different things in different
 # contexts. We need to choose one meaning
@@ -44,7 +34,6 @@ map(m::PermMat, k::Real) = k > length(m.data) ? convert(T,k) : (m.data)[k]
 
 copy(m::PermMat) = PermMat(copy(m.data))
 similar(m::PermMat, atype, dims) = Array(atype, dims)
-#eltype{T}(m::PermMat{T}) = T
 
 ## operators ##
 
@@ -54,7 +43,6 @@ similar(m::PermMat, atype, dims) = Array(atype, dims)
 >(m1::PermMat, m2::PermMat) = PermPlain.ltpermlist(m2.data,m1.data)
 inv(m::PermMat) = PermMat(invperm(m.data))
 *{T<:String}(p::PermMat, v::T) = PermPlain.permapply(p.data,v)
-#*{T}(m::PermMat, a::AbstractVector{T}) = [ m * i for i in a]
 *{T}(p::PermMat, a::AbstractVector{T}) = PermPlain.permapply(p.data,a)
 *(m1::PermMat, m2::PermMat) = PermMat(PermPlain.permcompose(m2.data,m1.data))
 /(m1::PermMat, m2::PermMat) = PermMat(PermPlain.permcompose(m2.data,invperm(m1.data)))
