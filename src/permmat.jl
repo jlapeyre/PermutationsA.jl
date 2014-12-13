@@ -33,6 +33,7 @@ map(m::PermMat, k::Real) = k > length(m.data) ? convert(T,k) : (m.data)[k]
 
 copy(m::PermMat) = PermMat(copy(m.data))
 similar(m::PermMat, atype, dims) = Array(atype, dims)
+similar{T}(m::PermMat{T}) = Array(T, size(m)...)
 
 ## operators ##
 
@@ -111,9 +112,16 @@ end
 
 ## tests and properties
 
+for f in (:cyclelengths, :cycletype, :isid, :leastmoved, :isperm,
+           :greatestmoved, :supportsize, :support, :fixed )
+    @eval begin
+        ($f)(m::PermMat) = (PermPlain.$f)(m.data)
+    end
+end
+
 for (f1,f2) in ((:order, :permorder) , (:sign, :permsgn),
                 (:cyclelengths, :cyclelengths), (:cycletype, :cycletype),
-                (:isid, :isid), (:leastmoved, :leastmoved),
+                (:isid, :isid), (:leastmoved, :leastmoved), (:isperm, :isperm),
                 (:greatestmoved,:greatestmoved), (:supportsize, :supportsize),
                 (:support,:support), (:fixed,:fixed))
     @eval begin
