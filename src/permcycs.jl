@@ -96,9 +96,9 @@ leastmoved(cs::PermCycs) = minimum([ minimum(c) for c in cs.data ])
 ## Output ##
 
 function print(io::IO, c::PermCycs)
-    print("(")
+    print(io,"(")
     for cyc in c.data PermPlain.cycleprint(io, cyc) end
-    print(")")    
+    print(io,")")    
 end
 
 show(io::IO, c::PermCycs) = print(io,c)
