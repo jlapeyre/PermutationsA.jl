@@ -86,6 +86,8 @@ q = PermList([3,8,4,9,7,6,1,10,5,2])
 #Q = matrix(q)
 #@test q * p == matrix(p*q)
 @test p' == inv(p)
+@test string(p) == "( 3  2  4  10 1  6  5  8  7  9  )"
+@test string(PermCycs(((1, 6, 2, 7, 9),(3, 8, 4,10, 5)))) == "((16279)(384105))"
 
 a = PermList([20,15,6,7,19,10,18,3,12,14,17,9,2,5,13,1,11,16,8,4])
 a1 = permlist(20,15,6,7,19,10,18,3,12,14,17,9,2,5,13,1,11,16,8,4)
@@ -190,4 +192,3 @@ end
 
 @test PermSparse() == PermCycs() == PermList()
 @test PermList([1:10]) == PermList([1:20])
-

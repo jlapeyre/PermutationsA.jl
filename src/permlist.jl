@@ -1,5 +1,6 @@
 export PermList
 export randpermlist, leastmoved, greatestmoved, supportsize, support, fixed
+export pow2
 
 import DataStructures: list
 
@@ -57,6 +58,8 @@ getindex{T}(v::Array{T,1},p::PermList{Bool}) = error("Silence compiler. You don'
 getindex(v::Array, p::PermList) = v[p.data] # How to define this for everything?
 getindex(v::String, p::PermList) = v[p.data] # How to define this for everything?
 *(p::PermList, k::Real) = k > length(p) ? k : p[k]
+# Following is a bit inconsistent. Should we permute the elements based on
+# their position, or on their value ? Should we grow array if necessary ?
 *{T<:String}(p::PermList, v::T) = PermPlain.permapply(p.data,v)
 *{T}(p::PermList, a::AbstractVector{T}) = PermPlain.permapply(p.data,a)
 *(p::PermList, q::PermList) = PermList(PermPlain.permcompose(p.data,q.data))
@@ -67,6 +70,7 @@ compose!(p::PermList, q::PermList) = PermPlain.permcompose!(p.data,q.data)
 # see pari,gap for more efficient algorithm
 /(p::PermList, q::PermList) = PermList(PermPlain.permcompose(p.data,invperm(q.data)))
 ^(p::PermList, k::Integer) = PermList(PermPlain.permpower(p.data,k))
+pow2(p::PermList, k::Real) = PermList(PermPlain.cyc_pow_perm(cycles(p).data,k))
 
 # preimage of k under p
 /(k::Int, p::PermList) = PermPlain.preimage(p.data,k)
@@ -123,10 +127,6 @@ end
 #     return true
 # end
 
-
-# Wikipedia says that if M_i represents p_i, then
-# M_1 * M_2  <---> p_2 ∘ p_1
-# We should check and follow this convention.
 function *(m1::PermList, m2::AbstractMatrix)
     p = m1.data
     n = length(p)

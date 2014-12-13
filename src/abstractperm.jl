@@ -1,4 +1,5 @@
 abstract AbstractPerm{T} <: AbstractMatrix{T}
+#abstract AbstractPerm{T}
 
 export AbstractPerm
 export plength, isid, idperm, sparse
