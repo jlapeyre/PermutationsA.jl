@@ -13,9 +13,9 @@ generic routines in the module `PermPlain`.
 
 There is an abstract permutation type.
 
-     ```julia
+```julia
      AbstractPerm{T} <: AbstractMatrix{T}
-     ```
+```
 The remaining types differ in how they store the data representing the permutation
 
 *  ```PermList``` is an ```Array{T,1}``` corresponding to the one-line form
