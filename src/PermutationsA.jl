@@ -5,6 +5,7 @@ export cycles, cycletype, cyclelengths
 
 using PermPlain
 import Base: length, sign, copy, convert, sparse, full
+import Base: show,print,writemime
 
 include("abstractperm.jl")
 include("permlist.jl")

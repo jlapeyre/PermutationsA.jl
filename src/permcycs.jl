@@ -1,4 +1,5 @@
 export PermCycs
+export randpermcycs
 
 immutable PermCycs{T<:Real} <: AbstractPerm{T}
     data::Array{Array{T,1},1}
@@ -7,7 +8,6 @@ end
 ## Construct PermCycs objects ##
 
 # construct permutation from list of disjoint cycles
-#function permcycs{T}(::Type{T}, cycs...)
 function permcycs(T::Type, cycs...)
     length(cycs) == 0 && return PermCycs()
     pc = PermCycs(PermPlain.canoncycles([collect(T,c) for c in cycs]))
@@ -29,7 +29,6 @@ permcycs() = PermCycs()
 idpermcyc() = PermCycs()
 idpermcyc{T}(::Type{T}) = PermCycs(T)
 idperm{T}(c::PermCycs{T}) = PermCycs(T)
-#one{T}(c::PermCycs{T}) = PermCycs(T)
 plength(c::PermCycs) = greatestmoved(c)
 
 ## Copying, indexing, ... ##
@@ -98,12 +97,14 @@ leastmoved(cs::PermCycs) = minimum([ minimum(c) for c in cs.data ])
 
 function print(io::IO, c::PermCycs)
     print("(")
-    for cyc in c.data cycleprint(io, cyc) end
+    for cyc in c.data PermPlain.cycleprint(io, cyc) end
     print(")")    
 end
 
-arrprint(io::IO, c::PermCycs) = arrprint(io,list(c))
-arrprint(c::PermCycs) = arrprint(STDOUT,c)
+aprint(io::IO, c::PermCycs) = arrprint(io,list(c))
+aprint(c::PermCycs) = arrprint(STDOUT,c)
+cprint(c::PermCycs) = print(c)
+cprint(io::IO,c::PermCycs) = print(io,c)
 lineprint(io::IO, c::PermCycs) = print(io,list(c))
 lineprint(c::PermCycs) = lineprint(STDOUT,c)
 show(io::IO, c::PermCycs) = print(io,c)

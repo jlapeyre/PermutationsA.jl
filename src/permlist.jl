@@ -1,5 +1,5 @@
 export PermList
-export leastmoved, greatestmoved, supportsize, support, fixed
+export randpermlist, leastmoved, greatestmoved, supportsize, support, fixed
 
 import DataStructures: list
 

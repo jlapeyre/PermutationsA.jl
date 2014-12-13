@@ -1,5 +1,4 @@
 export PermMat
-
 export randpermmat, idpermmat
 
 ## object and constructors  ##

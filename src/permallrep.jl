@@ -24,6 +24,9 @@ randpermsparse{T<:Real}(::Type{T}, n::Integer) = PermSparse(randpermlist(T,n).da
 randperm(::Type{PermSparse}, n::Real) = randpermsparse(n)
 randperm{T<:Real}(::Type{PermSparse{T}}, n::Real) = randpermsparse(T,n)
 
+full(c::PermCycs) = full(list(c))
+sparse(c::PermCycs) = sparse(psparse(c))
+
 ## Compare, test, and/or return properties ##
 
 # Don't know which to choose
