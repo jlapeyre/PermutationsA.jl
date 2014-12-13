@@ -39,19 +39,19 @@ map{T}(p::PermList{T}, k::Real) = k > length(p.data) ? convert(T,k) : (p.data)[k
 
 ## Compare, test, and/or return properties ##
 
-isperm(p::PermList) = PermPlain.isperm(p.data)
-isid(p::PermList) = PermPlain.isid(p.data)
-commute(p::PermList,q::PermList) = PermPlain.permcommute(p.data,q.data)
-distance(p::PermList, q::PermList) = PermPlain.permdistance(p.data,q.data)
+#isperm(p::PermList) = PermPlain.isperm(p.data)
+#isid(p::PermList) = PermPlain.isid(p.data)
+#commute(p::PermList,q::PermList) = PermPlain.permcommute(p.data,q.data)
+#distance(p::PermList, q::PermList) = PermPlain.permdistance(p.data,q.data)
 # looks like Julia defines combinations and opposites automatically, unless otherwise defined
 
 ==(p::PermList, q::PermList) = PermPlain.permlistisequal(p.data,q.data) # agrees with gap
 <(p::PermList, q::PermList) =  PermPlain.ltpermlist(p.data,q.data) # agrees with pari (or was it gap?)
 <=(p::PermList, q::PermList) = PermPlain.lepermlist(p.data,q.data) # agrees with pari (or was it gap?)
-sign(p::PermList) = PermPlain.permsgn(p.data)
-order(p::PermList) = PermPlain.permorder(p.data)
-cyclelengths(p::PermList) = PermPlain.cyclelengths(p.data)
-cycletype(p::PermList) = PermPlain.cycletype(p.data)
+#sign(p::PermList) = PermPlain.permsgn(p.data)
+#order(p::PermList) = PermPlain.permorder(p.data)
+#cyclelengths(p::PermList) = PermPlain.cyclelengths(p.data)
+#cycletype(p::PermList) = PermPlain.cycletype(p.data)
 
 ## Generate, transform  PermList objects ##
 
@@ -86,14 +86,14 @@ compose!(p::PermList, q::PermList) = PermPlain.permcompose!(p.data,q.data)
 /(k::Int, p::PermList) = PermPlain.preimage(p.data,k)
 
 # List of points mapped to same point by p and q
-same(p::PermList, q::PermList) = PermPlain.same(p.data,q.data)
+#same(p::PermList, q::PermList) = PermPlain.same(p.data,q.data)
 # agrees with gap (except definition,use of inifinity is different)
-leastmoved(p::PermList) = PermPlain.leastmoved(p.data)
+#leastmoved(p::PermList) = PermPlain.leastmoved(p.data)
 # agrees with gap
-greatestmoved(p::PermList) = PermPlain.greatestmoved(p.data)
-supportsize(p::PermList) = PermPlain.supportsize(p.data)
-support(p::PermList) = PermPlain.support(p.data)
-fixed(p::PermList) = PermPlain.fixed(p.data)
+#greatestmoved(p::PermList) = PermPlain.greatestmoved(p.data)
+#supportsize(p::PermList) = PermPlain.supportsize(p.data)
+#support(p::PermList) = PermPlain.support(p.data)
+#fixed(p::PermList) = PermPlain.fixed(p.data)
 
 ## Output ##
 
@@ -112,6 +112,25 @@ show(io::IO, p::PermList) = print(io,p)
 show(p::PermList) = print(p)
 # This is needed to avoid trying to print PermList with showarray and failing in 1000 ways
 writemime(io::IO, ::MIME"text/plain", p::PermList) = print(io,p)
+
+## tests and properties
+
+for (f1,f2) in ((:order, :permorder) , (:sign, :permsgn),
+                (:cyclelengths, :cyclelengths), (:cycletype, :cycletype),
+                (:isid, :isid), (:leastmoved, :leastmoved),
+                (:greatestmoved,:greatestmoved), (:supportsize, :supportsize),
+                (:support,:support), (:fixed,:fixed), (:isperm, :isperm))
+    @eval begin
+        ($f1)(m::PermList) = (PermPlain.$f2)(m.data)
+    end
+end
+
+for (f1,f2) in ((:commute, :permcommute) , (:distance, :permdistance),
+                (:same, :same))
+    @eval begin
+        ($f1)(m1::PermList, m2::PermList) = (PermPlain.$f2)(m1.data,m2.data)
+    end
+end
 
 # function ==(pm::PermList, m::AbstractMatrix)
 #     (n1,n2) = size(m)
