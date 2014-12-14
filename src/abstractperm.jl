@@ -1,11 +1,11 @@
 abstract AbstractPerm{T} <: AbstractMatrix{T}
 
 export AbstractPerm
-export plength, isid, sparse
+export plength, isid
 
-import Base: rank, sign, det, logdet, trace, ishermitian, issym, istriu,
+import Base: rank, sign, det, logdet, trace, ishermitian, issym, iseven, istriu,
        istril, isposdef, null, getindex,  transpose, ctranspose, inv, pmap,
-       isperm, one, full, sparse, size, eltype
+       isperm, one, zero, full, sparse, size, eltype
 
 size(m::AbstractPerm) = (s = plength(m); (s,s))
 eltype{T}(c::AbstractPerm{T}) = T
@@ -17,7 +17,7 @@ getindex(m::AbstractPerm, i::Real, j::Real) =  pmap(m,i) == j ? one(eltype(m)) :
 \(p::AbstractPerm, k::Integer) = k / p
 
 function mkerrf()
-    for sym in (:plength, :isid, :isperm, :pmap, :sign  )
+    for sym in (:plength, :isid, :isperm, :pmap, :sign )
         @eval begin
             ($sym)(p::AbstractPerm) = error("AbstractPerm: `", $sym , "' not defined for ", typeof(p))
         end
@@ -39,6 +39,7 @@ function sparse{T}(m::AbstractPerm{T})
     sparse(I,J,V)
 end
 
+zero(p::AbstractPerm) = error("zero not defined for type ", typeof(p))
 ctranspose(m::AbstractPerm) = inv(m)
 transpose(m::AbstractPerm) = inv(m)
 inv(m::AbstractPerm) = m^-1
@@ -49,6 +50,7 @@ logdet(p::AbstractPerm) = sign(p) > 0 ? 0 : error("AbstractPerm: DomainError: de
 trace(p::AbstractPerm) = plength(p) - supportsize(p)
 ishermitian(p::AbstractPerm) = isid(p)
 issym(p::AbstractPerm) = isid(p)
+iseven(p::AbstractPerm) = sign(p) == one(eltype(p))
 istriu(p::AbstractPerm) = isid(p)
 istril(p::AbstractPerm) = isid(p)
 isposdef(p::AbstractPerm) = isid(p)

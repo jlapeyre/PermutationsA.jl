@@ -36,4 +36,3 @@ m1 = matrix(p1)
 @test m1 * v == p1.data
 @test full(m1) * v == p1.data
 @test sparse(m1) * v == p1.data
-

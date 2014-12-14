@@ -22,6 +22,9 @@ for (ptype, lcptype) in  ( (:PermMat, :permmat ) , (:PermList, :permlist), (:sto
 #        similar{T,V}(m::$ptype{V}, ::Type{T}, a::Int, b::Int) = Array(T,a,b)        
         similar{T<:Real}(::Type{$ptype}, ::Type{T}, a::Int, b::Int) = Array(T,a,b)        
         plength(p::$ptype) = length(p.data)
+
+        one(::Type{$ptype}) = $ptype()
+        one{T}(::Type{$ptype{T}}) = $ptype(T)
         
         one{T}(::Type{$ptype{T}}, n::Integer) = $ptype(T[one(1):convert(T,n)])
         one(::Type{$ptype}, n::Integer) = one($ptype{Int},n)

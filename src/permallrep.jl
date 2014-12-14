@@ -1,5 +1,5 @@
 ### methods using more than one object type representing permutations
-export psparse
+export psparse, astring, lstring, mstring, cstring
 import Base: randperm
 
 ## Construct objects ##
@@ -174,5 +174,10 @@ lprint(io::IO, p::PermList) = print(io,p)
 lprint(p::PermList) = lprint(STDOUT,p)
 
 # stopgap
-mprint(io::IO,p::AbstractPerm) = print(full(p))
+mprint(io::IO,p::AbstractPerm) = print(io,full(p))
 mprint(p::AbstractPerm) = mprint(STDOUT,p)
+
+astring(xs...) = PermPlain.pprint_to_string(aprint,xs...)
+cstring(xs...) = PermPlain.pprint_to_string(cprint,xs...)
+lstring(xs...) = PermPlain.pprint_to_string(lprint,xs...)
+mstring(xs...) = PermPlain.pprint_to_string(mprint,xs...)

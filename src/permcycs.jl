@@ -17,6 +17,7 @@ end
 
 PermCycs(a::Tuple) = PermCycs(PermPlain.tupcollect(a))
 PermCycs{T}(::Type{T}, a::Tuple) = PermCycs(PermPlain.tupcollect(T,a))
+PermCycs{T<:Real}(::Type{T}) = PermCycs(Array(Array{T,1},0))
 
 function permcycs(cycs...)
     length(cycs) == 0 && return PermCycs()
@@ -28,6 +29,8 @@ PermCycs() = PermCycs(Array(Array{Int,1},0))
 permcycs() = PermCycs()
 idpermcyc() = PermCycs()
 idpermcyc{T}(::Type{T}) = PermCycs(T)
+one(::Type{PermCycs}) = PermCycs()
+one{T}(::Type{PermCycs{T}}) = PermCycs(T)
 idperm{T}(c::PermCycs{T}) = PermCycs(T)
 plength(c::PermCycs) = greatestmoved(c)
 
@@ -90,7 +93,7 @@ function fixed(c::PermCycs)
     return outa
 end
 
-greatestmoved(cs::PermCycs) = maximum([ maximum(c) for c in cs.data ])
+greatestmoved(cs::PermCycs) = (isempty(cs) ? zero(eltype(cs)) : maximum([ maximum(c) for c in cs.data ]))
 leastmoved(cs::PermCycs) = minimum([ minimum(c) for c in cs.data ])
 
 ## Output ##

@@ -1,6 +1,8 @@
 export PermMat
 export randpermmat
 
+import Base: kron
+
 ## object and constructors  ##
 
 immutable PermMat{T<:Real} <: AbstractPerm{T}
@@ -74,6 +76,22 @@ function -(p::PermMat, m::AbstractArray)
         mout[i,j] = -mout[i,j] + mo
     end
     mout
+end
+
+# output is not a permutation
+# This is *very* slow. Does not take advantage of data structure.
+# The other AbstractPerm types can't use this because of the R[m].
+function kron{T,S}(a::PermMat{T}, b::PermMat{S})
+    R = Array(promote_type(T,S), size(a,1)*size(b,1), size(a,2)*size(b,2))
+    m = 1
+    for j = 1:size(a,2), l = 1:size(b,2), i = 1:size(a,1)
+        aij = a[i,j]
+        for k = 1:size(b,1)
+            R[m] = aij*b[k,l]
+            m += 1
+        end
+    end
+    R
 end
 
 include("matlistcommon.jl")
