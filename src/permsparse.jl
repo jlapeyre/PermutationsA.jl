@@ -10,7 +10,8 @@ PermSparse{T<:Real}(p::AbstractVector{T}) =  PermSparse(PermPlain.listtosparse(p
 PermSparse{T<:Real}(cycs::AbstractArray{Array{T,1},1}) = PermSparse(PermPlain.cycstosparse(cycs)...)
 
 PermSparse(a::Tuple) = PermSparse(PermPlain.tupcollect(a))
-PermSparse{T}(::Type{T}, a::Tuple) = PermSparse(PermPlain.tupcollect(T,a))
+PermSparse{T<:Real}(::Type{T}) = PermSparse(T[])
+PermSparse{T<:Real}(::Type{T}, a::Tuple) = PermSparse(PermPlain.tupcollect(T,a))
 PermSparse() = PermSparse(Int[])
 
 function getindex{T}(ps::PermSparse{T}, k::Real)
@@ -18,7 +19,7 @@ function getindex{T}(ps::PermSparse{T}, k::Real)
     res == zero(T) ? convert(T,k) : res    
 end
 
-map(ps::PermSparse, k::Real) = getindex(ps,k)
+pmap(ps::PermSparse, k::Real) = getindex(ps,k)
 copy(p::PermSparse) = PermSparse(copy(p.data),p.plen)
 setindex!(p::PermSparse, i::Int, k::Integer) = (p.data)[k] = i
 length(ps::PermSparse) = ps.plen
@@ -29,6 +30,11 @@ order(ps::PermSparse) = PermPlain.permorder(ps.data)
 supportsize(ps::PermSparse) = length(ps.data)
 support(ps::PermSparse) = collect(keys(ps.data))
 sign(ps::PermSparse) = PermPlain.permsgn_from_lengths(PermPlain.cyclelengths(ps.data))
+
+one{T}(::Type{PermSparse{T}}) = PermSparse(T)
+one(::Type{PermSparse}) = PermSparse(Int)
+one{T}(p::PermSparse{T}) = PermSparse(T)
+one(p::PermSparse) = PermSparse(eltype(p))
 
 *(ps::PermSparse, k::Real) = ps[k]
 *{T<:String}(p::PermSparse, v::T) = PermPlain.permapply(p.data,v)

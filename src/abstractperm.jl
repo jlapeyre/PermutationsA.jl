@@ -1,24 +1,23 @@
 abstract AbstractPerm{T} <: AbstractMatrix{T}
-#abstract AbstractPerm{T}
 
 export AbstractPerm
-export plength, isid, idperm, sparse
+export plength, isid, sparse
 
 import Base: rank, sign, det, logdet, trace, ishermitian, issym, istriu,
-       istril, isposdef, null, getindex,  transpose, ctranspose, inv, map,
+       istril, isposdef, null, getindex,  transpose, ctranspose, inv, pmap,
        isperm, one, full, sparse, size, eltype
 
 size(m::AbstractPerm) = (s = plength(m); (s,s))
 eltype{T}(c::AbstractPerm{T}) = T
 
 # this one is not called for some reason
-getindex{T}(m::AbstractPerm{T}, i::Real, j::Real) =  map(m,j) == i ? one(T) : zero(T)
+#getindex{T}(m::AbstractPerm{T}, i::Real, j::Real) =  pmap(m,j) == i ? one(T) : zero(T)
 # this one is called
-getindex(m::AbstractPerm, i::Real, j::Real) =  map(m,j) == i ? one(eltype(m)) : zero(eltype(m))
+getindex(m::AbstractPerm, i::Real, j::Real) =  pmap(m,i) == j ? one(eltype(m)) : zero(eltype(m))
 \(p::AbstractPerm, k::Integer) = k / p
 
 function mkerrf()
-    for sym in (:plength, :isid, :isperm, :map, :sign, :idperm )
+    for sym in (:plength, :isid, :isperm, :pmap, :sign  )
         @eval begin
             ($sym)(p::AbstractPerm) = error("AbstractPerm: `", $sym , "' not defined for ", typeof(p))
         end
@@ -28,19 +27,18 @@ end
 mkerrf()
 
 # dense matrix
-full(p::AbstractPerm) = [p[i,j] for i=1:plength(p), j=1:plength(p)]
+full(p::AbstractPerm) = (T=eltype(p); T[p[i,j] for i=1:plength(p), j=1:plength(p)])
 
 # sparse matrix
 function sparse{T}(m::AbstractPerm{T})
     n = plength(m)
     I = [1:n]
-    J = T[ map(m,i) for i in 1:n] # should call a routine for this, so that PermCyc is efficient
+    J = T[ pmap(m,i) for i in 1:n] # should call a routine for this, so that PermCyc is efficient
 #    J = (m.data)[I]
     V = ones(T,n)
-    sparse(J,I,V)
+    sparse(I,J,V)
 end
 
-one(m::AbstractPerm) = idperm(m)
 ctranspose(m::AbstractPerm) = inv(m)
 transpose(m::AbstractPerm) = inv(m)
 inv(m::AbstractPerm) = m^-1

@@ -26,9 +26,9 @@ for a in (PermList([10,1,3,6,9,8,4,5,7,2]),
     @test a * a == a^2
     @test a * a * a == a^3
     @test a * a * c == a^2 * c
-    @test a^order(a) == idpermlist(n)
+    @test a^order(a) == one(a)
     @test a^(order(a)+1) == a
-    @test a^-1 * a == idpermlist(n)
+    @test a^-1 * a == one(PermList,n)
     @test isid(a^-1 * a)
     @test a^-1 == inv(a)
     @test matrix(a)^order(a) == eye(Int,n)
@@ -41,7 +41,8 @@ for a in (PermList([10,1,3,6,9,8,4,5,7,2]),
 end
 
 @test (c * eye(Int,n)) * (c' * eye(Int,n)) == eye(Int,n)
-#@test c * eye(Int,n) * c' == eye(Int,n)
+@test c * eye(Int,n) == c
+@test c * eye(Int,n) * c' == eye(Int,n)
 
 @test sparse(PermList([3,5,6,1,2,4])) == sparse(PermSparse([3,5,6,1,2,4]))
 
@@ -72,9 +73,9 @@ end
 @test c1 < c
 @test c >= c1
 @test c1 <= c
-@test c1 > idperm(c1)
+@test c1 > one(c1)
 
-@test idpermlist(n) == PermList([1:n])
+@test one(PermList,n) == PermList([1:n])
 
 # This is ok, but trans is broken in general
 #@test sign(a) == (-1)^length(trans(a))

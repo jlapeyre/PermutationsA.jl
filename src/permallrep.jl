@@ -98,7 +98,7 @@ function ==(pm::Union(PermList,PermMat), m::AbstractMatrix)
     n1 == n2 || return false
     for j in 1:n1
         for i in 1:n1
-            val = m[i,j]
+            val = m[j,i]
             if val != 0
                 ((val == 1 && d[j] == i) || return false)
             end
@@ -112,7 +112,7 @@ function ==(pm::PermSparse, m::AbstractMatrix)
     n1 == n2 || return false
     for j in 1:n1
         for i in 1:n1
-            val = m[i,j]
+            val = m[j,i]
             if val != 0
                 ((val == 1 && pm[j] == i) || return false)
             end
@@ -128,7 +128,7 @@ function ==(m::Union(Matrix,SparseMatrixCSC), pm::Union(PermList,PermMat))
     n1 == n2 || return false
     for j in 1:n1
         for i in 1:n1
-            val = m[i,j]
+            val = m[j,i]
             if val != 0
                 ((val == 1 && d[j] == i) || return false)
             end
@@ -142,7 +142,7 @@ function ==(m::Union(Matrix,SparseMatrixCSC), pm::PermSparse)
     n1 == n2 || return false
     for j in 1:n1
         for i in 1:n1
-            val = m[i,j]
+            val = m[j,i]
             if val != 0
                 ((val == 1 && pm[j] == i) || return false)
             end

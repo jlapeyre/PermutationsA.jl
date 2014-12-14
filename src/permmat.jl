@@ -1,5 +1,5 @@
 export PermMat
-export randpermmat, idpermmat
+export randpermmat
 
 ## object and constructors  ##
 
@@ -7,131 +7,73 @@ immutable PermMat{T<:Real} <: AbstractPerm{T}
     data::Vector{T}
 end
 
-PermMat() = PermMat(Int[])
-
-isperm(m::PermMat) = isperm(m.data)
-idpermmat(n::Integer) = PermMat([1:n])
-idpermmat(T::DataType, n::Integer) = PermMat([one(T):convert(T,n)])
-
-idperm{T}(m::PermMat{T}) = PermMat([one(T):convert(T,length(m.data))])
-
-plength(m::PermMat) = length(m.data)
-
-## size, copy, indexing ##
+length(p::PermMat) = (l=length(p.data); l * l)
 
 # Single dimensional index means different things in different
-# contexts. We need to choose one meaning
-function getindex{T}(m::PermMat{T}, k::Integer)
+# contexts. For matrix, it acts like a matrix.
+function getindex(m::PermMat, k::Integer)
     i,j = divrem(k-1,plength(m))
-    return m.data[j+1] == i+1 ? one(T) : zero(T)
+    return m.data[j+1] == i+1 ? one(eltype(m)) : zero(eltype(m))
 end
-#getindex{T}(m::PermMat{T}, k::Integer) = k > length(m.data) ? convert(T,k) : (m.data)[k]
 
+# should not be calling this, anyway
 setindex!(m::PermMat, i::Int, k::Integer) = m.data[k] = i
 
-map(m::PermMat, k::Real) = k > length(m.data) ? convert(T,k) : (m.data)[k]
-
-copy(m::PermMat) = PermMat(copy(m.data))
-similar(m::PermMat, atype, dims) = Array(atype, dims)
-similar{T}(m::PermMat{T}) = Array(T, size(m)...)
+# This is needed for eigvals()
+similar(p::PermMat, T, dims...) = Array(T,dims...)
+# Allows linear indexing, eg a[1:3]
+similar(a::PermMat, dims::Dims) = Array(eltype(a), dims)
 
 ## operators ##
 
-^(m::PermMat, n::Integer) = PermMat(PermPlain.permpower(m.data,n))
-==(m1::PermMat, m2::PermMat) = PermPlain.permlistisequal(m1.data,m2.data)
-<(m1::PermMat, m2::PermMat) = PermPlain.ltpermlist(m1.data,m2.data)
->(m1::PermMat, m2::PermMat) = PermPlain.ltpermlist(m2.data,m1.data)
-inv(m::PermMat) = PermMat(invperm(m.data))
-*{T<:String}(p::PermMat, v::T) = PermPlain.permapply(p.data,v)
 *{T}(p::PermMat, a::AbstractVector{T}) = PermPlain.permapply(p.data,a)
-*(m1::PermMat, m2::PermMat) = PermMat(PermPlain.permcompose(m2.data,m1.data))
 /(m1::PermMat, m2::PermMat) = PermMat(PermPlain.permcompose(m2.data,invperm(m1.data)))
-*(m::PermMat, k::Integer) = k > plength(m) ? k : m.data[k]
-/(k::Integer, m::PermMat) = PermPlain.preimage(m.data,k)
-#*(m::PermMat, v::Vector) = v[m.data]
+*(m::PermMat, k::Integer) = full(m) * k
 
-# function ==(pm::PermMat, m::AbstractMatrix)
-#     (n1,n2) = size(m)
-#     d = pm.data
-#     n1 == n2 || return false
-#     for j in 1:n1
-#         for i in 1:n1
-#             val = m[i,j]
-#             if val != 0
-#                 ((val == 1 && d[j] == i) || return false)
-#             end
-#         end
-#     end
-#     return true
-# end
-
-# # could factor this code somehow
-# function ==(m::AbstractMatrix, pm::PermMat)
-#     (n1,n2) = size(m)
-#     d = pm.data
-#     n1 == n2 || return false
-#     for j in 1:n1
-#         for i in 1:n1
-#             val = m[i,j]
-#             if val != 0
-#                 ((val == 1 && d[j] == i) || return false)
-#             end
-#         end
-#     end
-#     return true
-# end
-
-# Wikipedia says that if M_i represents p_i, then
-# M_1 * M_2  <---> p_2 ∘ p_1
-# We should check and follow this convention.
-function *(m1::PermMat, m2::AbstractMatrix)
-    p = m1.data
-    n = length(p)
-    om = zeros(m2)
-    for j in 1:n
-        for i in 1:n
-            om[i,j] = m2[i,p[j]]
-        end
+function +(p::PermMat, m::AbstractArray)
+    size(p) == size(m) || error("dimensions must match")
+    mout = copy(m)
+    d = p.data
+    mo = one(eltype(m))
+    for i in 1:length(d)
+        mout[i,d[i]] += mo
     end
-    return om
+    mout
 end
 
-# can't make m2 abstract, because I get method collisions.
-# sol'n depends on whose special matrix routine should be applied.
-function *(m2::Matrix, m1::PermMat)
-    p = m1.data
-    n = length(p)
-    om = zeros(m2)
-    for j in 1:n
-        for i in 1:n
-            om[i,j] = m2[p[i],j]
-        end
+function +(m::PermMat, p::PermMat)
+    size(p) == size(m) || error("dimensions must match")
+    dp = p.data
+    dm = m.data
+    mo = one(eltype(m))
+    mout = full(m)
+    for i in 1:length(dp)
+        mout[i,dp[i]] += mo
     end
-    return om
+    mout
 end
 
-## tests and properties
-
-for f in (:cyclelengths, :cycletype, :isid, :leastmoved, :isperm,
-           :greatestmoved, :supportsize, :support, :fixed )
-    @eval begin
-        ($f)(m::PermMat) = (PermPlain.$f)(m.data)
+function +(m::AbstractArray, p::PermMat)
+    size(p) == size(m) || error("dimensions must match")
+    mout = copy(m)
+    d = p.data
+    mo = one(eltype(m))
+    for i in 1:length(d)
+        mout[i,d[i]] += mo
     end
+    mout
 end
 
-for (f1,f2) in ((:order, :permorder) , (:sign, :permsgn),
-                (:cyclelengths, :cyclelengths), (:cycletype, :cycletype),
-                (:isid, :isid), (:leastmoved, :leastmoved), (:isperm, :isperm),
-                (:greatestmoved,:greatestmoved), (:supportsize, :supportsize),
-                (:support,:support), (:fixed,:fixed))
-    @eval begin
-        ($f1)(m::PermMat) = (PermPlain.$f2)(m.data)
+function -(p::PermMat, m::AbstractArray)
+    size(p) == size(m) || error("dimensions must match")
+    mout = copy(m)
+    d = p.data
+    mo = one(eltype(m))
+    for i in 1:length(d)
+        j = d[i]
+        mout[i,j] = -mout[i,j] + mo
     end
+    mout
 end
 
-for (f1,f2) in ((:commute, :permcommute) , (:distance, :permdistance),
-                (:same, :same))
-    @eval begin
-        ($f1)(m1::PermMat, m2::PermMat) = (PermPlain.$f2)(m1.data,m2.data)
-    end
-end
+include("matlistcommon.jl")
