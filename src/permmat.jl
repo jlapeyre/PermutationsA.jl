@@ -81,6 +81,7 @@ end
 # output is not a permutation
 # This is *very* slow. Does not take advantage of data structure.
 # The other AbstractPerm types can't use this because of the R[m].
+# Copied from linalg/dense.jl
 function kron{T,S}(a::PermMat{T}, b::PermMat{S})
     R = Array(promote_type(T,S), size(a,1)*size(b,1), size(a,2)*size(b,2))
     m = 1

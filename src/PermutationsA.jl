@@ -6,9 +6,11 @@ export cycles, cycletype, cyclelengths
 export cprint, lprint, aprint, mprint
 export pmap
 
-using PermPlain
+using  PermPlain
 import Base: length, sign, copy, convert, sparse, full, similar
 import Base: show,print,writemime
+import PermPlain: permlist, permcycles, permsparse, permmatrix
+
 
 include("abstractperm.jl")
 include("permlist.jl")
