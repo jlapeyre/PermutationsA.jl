@@ -27,9 +27,13 @@ e1 = [1,2,3]
 v1 = [.2,.3,.1,.7,.9]
 @test m * v1 == mf * v1
 
+@test length([i for i in m]) == 25
+@test length([i for i in p]) == 5
+
 # wikipedia example
 p1 = PermList([1,4,2,5,3])
 m1 = matrix(p1)
-m1 * v == p1.data
-full(m1) * v == p1.data
-sparse(m1) * v == p1.data
+@test m1 * v == p1.data
+@test full(m1) * v == p1.data
+@test sparse(m1) * v == p1.data
+
