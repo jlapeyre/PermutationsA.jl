@@ -60,9 +60,7 @@ methods that must be implemented by the concrete types.
 ### PermMat
 
 This type stores data in one-line form, but is meant to behave as much as
-possible like a ```Matrix```.  The method 'length' returns 
-
-The majority of the methods are identical to
+possible like a ```Matrix```. The majority of the methods are identical to
 those of ```PermList```.
 
 ### PermList
