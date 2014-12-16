@@ -1,13 +1,17 @@
+# These types should probably be subclasses of an abstract type
+
 for (ptype, lcptype) in  ( (:PermMat, :permmat ) , (:PermList, :permlist))
     if ptype == :stopsym
         continue
     end
 
     @eval begin
-        $ptype() = $ptype(Int[])
         
         ## Construct $ptype objects ##
 
+        $ptype() = $ptype(Int[])
+        $ptype{T<:Real}(m::AbstractArray{T,2}) = $ptype(PermPlain.mattoperm(m))
+        
         $lcptype(plist...) = $ptype(collect(plist))
         $lcptype{T<:Integer}(a::Vector{T}) = $ptype(a)
         $lcptype() = $ptype(Array(Int,0))
@@ -24,11 +28,12 @@ for (ptype, lcptype) in  ( (:PermMat, :permmat ) , (:PermList, :permlist))
 
         one(::Type{$ptype}) = $ptype()
         one{T}(::Type{$ptype{T}}) = $ptype(T)
-        
         one{T}(::Type{$ptype{T}}, n::Integer) = $ptype(T[one(1):convert(T,n)])
         one(::Type{$ptype}, n::Integer) = one($ptype{Int},n)
         one{T}(p::$ptype{T}) = one($ptype{T},plength(p))
         one(p::$ptype) = one($ptype{Int},plength(p))
+        zero(p::$ptype) = zeros(eltype(p),size(p)) # can't be a permutation
+        
         inv(p::$ptype) = $ptype(invperm(p.data))
         pmap(m::$ptype, k::Real) = k > length(m.data) ? convert(eltype(m),k) : (m.data)[k]
         compose!(p::$ptype, q::$ptype) = PermPlain.permcompose!(p.data,q.data)
