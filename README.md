@@ -22,9 +22,9 @@ array-like. This package defines
 
 and concrete subtypes:
 
-*  ```PermList``` is an ```Array{T,1}``` corresponding to the one-line form
-*  ```PermCyc``` is an ```Array{Array{T,1},}``` corresponding to disjoint-cycle form
-*  ```PermMat``` is a ```Matrix``` that stores the data in one-line form ```Array{T,1}```
+*  ```PermList``` an ```Array{T,1}``` corresponding to the one-line form
+*  ```PermCyc```  an ```Array{Array{T,1},}``` corresponding to disjoint-cycle form
+*  ```PermMat``` acts like a matrix. stores data in one-line form ```Array{T,1}```
 *  ```PermSparse``` is a ```Dict``` which can be thought of as one-line form with fixed points omitted
 
 These types differ both in how they store the data representing the
