@@ -1,5 +1,4 @@
-# stopsym to work around bug
-for (ptype, lcptype) in  ( (:PermMat, :permmat ) , (:PermList, :permlist), (:stopsym,:stopsym))
+for (ptype, lcptype) in  ( (:PermMat, :permmat ) , (:PermList, :permlist))
     if ptype == :stopsym
         continue
     end
