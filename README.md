@@ -71,6 +71,7 @@ those of ```PermList```.
 is no conflict with role as a permutation.
 But note this difference between ```PermList``` and ```PermMat```
 
+```julia
 julia> p = randpermlist(3)
 ( 3 1 2 )
 
