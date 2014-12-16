@@ -10,10 +10,10 @@ This module implements representations of permutations: list, disjoint
 cycles, and matrix, and sparse (not ```SparseMatrix```). The name is
 ```PermuationsA``` to distinguish it from the module
 ```Permutations```. This module wraps generic routines in the module
-```PermPlain```.
+```PermPlain``` .
 
-The Julia manual says the " ```AbstractArray``` type includes
-everything vaguely array-like". Permutations are at least vaguely
+The Julia manual says the ```AbstractArray``` type includes
+everything "vaguely array-like". Permutations are at least vaguely
 array-like. This package defines
 
 ```julia
