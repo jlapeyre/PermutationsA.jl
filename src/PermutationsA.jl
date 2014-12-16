@@ -1,7 +1,7 @@
 using DataStructures: counter
 module PermutationsA
 
-export permlist, order, idpermlist, matrix, distance, permcycs, list
+export permlist, permmat, order, idpermlist, matrix, distance, permcycs, list
 export cycles, cycletype, cyclelengths
 export cprint, lprint, aprint, mprint
 export pmap

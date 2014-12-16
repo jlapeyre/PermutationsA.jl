@@ -78,7 +78,7 @@ function -(p::PermMat, m::AbstractArray)
     mout
 end
 
-# output is not a permutation
+# output *is* a permutation
 # This is *very* slow. Does not take advantage of data structure.
 # The other AbstractPerm types can't use this because of the R[m].
 # Copied from linalg/dense.jl
@@ -90,6 +90,40 @@ function kron{T,S}(a::PermMat{T}, b::PermMat{S})
         for k = 1:size(b,1)
             R[m] = aij*b[k,l]
             m += 1
+        end
+    end
+    R
+end
+
+# This a bit more efficient. Cuts out one loop
+function kron{T,S}(a::PermMat{T}, b::AbstractMatrix{S})
+    (nrowa, ncola) = size(a)
+    (nrowb, ncolb) = size(a)
+    R = zeros(promote_type(T,S), nrowa * nrowb, ncola * ncolb)
+    d = inv(a).data  # prbly better to not break abstraction everywhere    
+    for j = 1:ncola, l = 1:ncolb
+        soff = ncola * (j-1)
+        i = d[j]
+        roff = ncola * (i-1)
+        for k = 1:nrowb
+            R[roff+k,soff+l] = b[k,l]
+        end
+    end
+    R
+end
+
+# For testing. If there is a difference, it is small
+function kron2{T,S}(a::PermMat{T}, b::AbstractMatrix{S})
+    (nrowa, ncola) = size(a)
+    (nrowb, ncolb) = size(a)
+    R = zeros(promote_type(T,S), nrowa * nrowb, ncola * ncolb)
+    d = a.data
+    for j = 1:ncola, l = 1:ncolb
+        soff = ncola * (j-1)
+        i = d[j]
+        roff = ncola * (i-1)
+        for k = 1:nrowb
+            R[soff+l,roff+k] = b[l,k]
         end
     end
     R

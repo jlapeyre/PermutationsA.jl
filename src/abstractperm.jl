@@ -3,9 +3,9 @@ abstract AbstractPerm{T} <: AbstractMatrix{T}
 export AbstractPerm
 export plength, isid
 
-import Base: rank, sign, det, logdet, trace, ishermitian, issym, iseven, istriu,
-       istril, isposdef, null, getindex,  transpose, ctranspose, inv, pmap,
-       isperm, one, zero, full, sparse, size, eltype
+import Base: rank, sign, det, logdet, trace, ishermitian, issym,
+iseven, istriu, istril, isposdef, null, getindex, transpose,
+ctranspose, inv, pmap, isperm, one, zero, full, sparse, size, eltype
 
 size(m::AbstractPerm) = (s = plength(m); (s,s))
 eltype{T}(c::AbstractPerm{T}) = T
