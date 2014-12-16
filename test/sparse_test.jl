@@ -10,8 +10,8 @@ q = PermList([1,4,3,5,9,7,2,8,6])
 sp = psparse(p)
 sq = psparse(q)
 sprod = sp * sq
-
 @test isperm(sprod)
+@test cyclelengths(sprod) == cyclelengths(p * q)
 #cycles(sprod)
 
 

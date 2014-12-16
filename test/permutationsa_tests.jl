@@ -38,6 +38,7 @@ for a in (PermList([10,1,3,6,9,8,4,5,7,2]),
     @test eye(a) != a
     @test a != eye(a)
     @test kron(a,a) == kron(full(a),full(a))
+    @test cyclelengths(a) == cyclelengths(list(a))
 end
 
 @test (c * eye(Int,n)) * (c' * eye(Int,n)) == eye(Int,n)
@@ -58,7 +59,6 @@ for a in (PermList([7,9,4,1,3,2,8,6,10,5]), PermList([10,1,3,6,9,8,4,5,7,2]),
         @test a * BigInt(i) == a * i
     end
 end
-    
 
 @test distance(c1,c1) == 0
 @test distance(c1,inv(c1)) == 10

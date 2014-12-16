@@ -30,6 +30,7 @@ order(ps::PermSparse) = PermPlain.permorder(ps.data)
 supportsize(ps::PermSparse) = length(ps.data)
 support(ps::PermSparse) = collect(keys(ps.data))
 sign(ps::PermSparse) = PermPlain.permsgn_from_lengths(PermPlain.cyclelengths(ps.data))
+cyclelengths(ps::PermSparse) = PermPlain.cyclelengths(ps.data)
 
 one{T}(::Type{PermSparse{T}}) = PermSparse(T)
 one(::Type{PermSparse}) = PermSparse(Int)
