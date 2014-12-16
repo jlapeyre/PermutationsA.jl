@@ -37,6 +37,7 @@ for a in (PermList([10,1,3,6,9,8,4,5,7,2]),
     @test full(a) == a == sparse(a)
     @test eye(a) != a
     @test a != eye(a)
+    @test kron(a,a) == kron(full(a),full(a))
 end
 
 @test (c * eye(Int,n)) * (c' * eye(Int,n)) == eye(Int,n)

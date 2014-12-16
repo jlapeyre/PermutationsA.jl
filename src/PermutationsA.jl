@@ -9,6 +9,7 @@ export pmap
 using  PermPlain
 import Base: length, sign, copy, convert, sparse, full, similar
 import Base: show,print,writemime
+import Base: kron
 import PermPlain: permlist, permcycles, permsparse, permmatrix
 
 

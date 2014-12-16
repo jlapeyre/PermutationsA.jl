@@ -44,3 +44,6 @@ one(p::PermSparse) = PermSparse(eltype(p))
 ^(ps::PermSparse, n::Integer) = PermSparse(PermPlain.permpower(ps.data,n)...)
 ^(ps::PermSparse, n::FloatingPoint) = PermSparse(PermPlain.permpower(ps.data,n)...)
 ==(p1::PermSparse, p2::PermSparse) = p1.data == p2.data
+function kron(p1::PermSparse, p2::PermSparse)
+    PermSparse(PermPlain.permkron(p1.data,p2.data)...)
+end

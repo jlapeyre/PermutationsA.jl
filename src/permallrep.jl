@@ -79,12 +79,12 @@ cycles(p::PermList) = PermCycs(PermPlain.permcycles(p.data))
 cycles(c::PermCycs) = c
 cycles(m::PermMat) = cycles(list(m))
 cycles(m::Array{Integer,2}) = cycles(list(m)) # inefficient
+cycles(sp::PermSparse) = PermCycs(PermPlain.canoncycles(PermPlain.sparsetocycles(sp.data)))
 list(c::PermCycs, n=0) = PermList(PermPlain.cycstoperm(c.data,n))
 list(p::PermList) = p  # not a copy !
 list(m::PermMat) = PermList(m.data)
 #list(m::Array{Integer,2}) = PermList(m * [1:size(m,1)]) why do this ?
 list(sp::PermSparse) = PermList(PermPlain.sparsetolist(sp.data))
-cycles(sp::PermSparse) = PermCycs(PermPlain.canoncycles(PermPlain.sparsetocycles(sp.data)))
 psparse(p::PermList) = PermSparse(p.data)
 psparse(c::PermCycs) = PermSparse(c.data)
 psparse(m::PermMat) = PermSparse(m.data)
@@ -118,6 +118,7 @@ function ==(pm::PermSparse, m::AbstractMatrix)
             end
         end
     end
+    pm.plen > n1 && return false
     return true
 end
 
@@ -148,6 +149,8 @@ function ==(m::Union(Matrix,SparseMatrixCSC), pm::PermSparse)
             end
         end
     end
+    pm.plen > n1 && return false
+    return true
     return true
 end
 
