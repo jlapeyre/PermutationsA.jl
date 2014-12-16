@@ -12,9 +12,8 @@ c1 = PermList([6,8,5,7,10,9,2,3,4,1])
 import Base: length
 
 for a in (PermList([10,1,3,6,9,8,4,5,7,2]),
-#          PermMat([10,1,3,6,9,8,4,5,7,2]),
+          PermMat([10,1,3,6,9,8,4,5,7,2]),
           PermSparse([10,1,3,6,9,8,4,5,7,2]))
-#    println("In loop")
     @test isperm(a)
     @test plength(a) == n
     b = copy(a)
@@ -95,7 +94,7 @@ a1 = permlist(20,15,6,7,19,10,18,3,12,14,17,9,2,5,13,1,11,16,8,4)
 @test a == a1
 
 ac = permcycs([1,20,4,7,18,16],[2,15,13],[3,6,10,14,5,19,8],[9,12],[11,17])
-# Second method no longer works.
+# Second method no longer works. Depends on version of Julia
 ac1 = permcycs((1,20,4,7,18,16),(2,15,13),(3,6,10,14,5,19,8),(9,12),(11,17))
 @test ac == ac1
 
@@ -163,7 +162,7 @@ v = ["cat","dog","zebra"]
 for c1 in ( permcycs((1,2), (3,4), (5,7,9,11)), permcycs((12,1,8), (3,4), (5,7,9,11)) )
     @test c1 == psparse(c1)
     @test c1 == list(c1)
-#    @test c1 == matrix(c1)
+    @test c1 == matrix(c1)
     @test det(c1) == sign(c1)
     @test rank(c1) == rank(full(c1))
     @test full(c1) == sparse(c1)
@@ -176,12 +175,12 @@ end
 @test typeof(randperm(PermList,n)) == PermList{Int}
 @test typeof(randperm(PermCycs,n)) == PermCycs{Int}
 @test typeof(randperm(PermSparse,n)) == PermSparse{Int}
-#@test typeof(randperm(PermMat,n)) == PermMat{Int}
+@test typeof(randperm(PermMat,n)) == PermMat{Int}
 
 @test typeof(randperm(PermList{BigInt},n)) == PermList{BigInt}
 @test typeof(randperm(PermCycs{BigInt},n)) == PermCycs{BigInt}
 @test typeof(randperm(PermSparse{BigInt},n)) == PermSparse{BigInt}
-#@test typeof(randperm(PermMat{BigInt},n)) == PermMat{BigInt}
+@test typeof(randperm(PermMat{BigInt},n)) == PermMat{BigInt}
 @test list(c1) * 7 == psparse(c1) * 7
 
 @test (PermSparse( ( (1,2,3), (4,5) )) ; true )
