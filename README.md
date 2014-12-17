@@ -98,7 +98,6 @@ julia> m = matrix(p)  # capture the pointer to the data in p, nothing else.
  1  0  0
  0  1  0
 
-
 julia> m * 3          # PermMat behaves like a matrix whenever possible.
 3x3 Array{Int64,2}:
  0  0  3
@@ -121,7 +120,7 @@ julia> p = list(c); length(p.data)   # convert to PermList. The data is a big ar
 julia> @time c^100000;        # Take advantage of cycle structure (easy in this case)
 elapsed time: 2.3248e-5 seconds (320 bytes allocated)
 
-julia> @time p^100000;    # Operate on big list. Julia is really fast anyway
+julia> @time p^100000;    # Operate on big list. Julia is really fast, anyway
 elapsed time: 0.01122444 seconds (1600192 bytes allocated)
 ```
 
@@ -166,9 +165,9 @@ true
 
 isid(one(PermList))
 true
-```end
+```
 
-```plength``` gives the largest number not mapped to itself. Zero
+plength  gives the largest number not mapped to itself. Zero
 means that all numbers are mapped to themselves.
 
 ```julia
