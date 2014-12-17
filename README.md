@@ -63,7 +63,7 @@ elapsed time: 0.008285471 seconds (8000208 bytes allocated)
 
 Every finite permutation can be represented (mathematically) as a
 matrix.  The ```AbstractPerm``` type implements  some of the
-properites of permutation matrices that are independent of the way the
+properties of permutation matrices that are independent of the way the
 data is stored in the concrete types. The following methods are
 defined in ```AbtractPerm``` and behave as they would on the
 ```Matrix``` type: det, logdet, rank, trace, ishermitian, issym,
@@ -244,10 +244,3 @@ julia> typeof(PermList(Int32[3,2,1]))
 PermList{Int32} (constructor with 1 method)
 
 For other features, see the test and source files.
-
-<!--  LocalWords:  PermutationsA PermuationsA PermPlain julia PermCyc
- -->
-<!--  LocalWords:  AbstractPerm AbstractMatrix PermList PermMat
- -->
-<!--  LocalWords:  PermSparse
- -->
