@@ -98,12 +98,12 @@ leastmoved(cs::PermCycs) = minimum([ minimum(c) for c in cs.data ])
 
 ## Output ##
 
-function print(io::IO, c::PermCycs)
+function _print(io::IO, c::PermCycs)
     print(io,"(")
     for cyc in c.data PermPlain.cycleprint(io, cyc) end
     print(io,")")    
 end
 
-show(io::IO, c::PermCycs) = print(io,c)
+show(io::IO, c::PermCycs) = _print(io,c)
 # This is needed to avoid trying to print PermList with showarray and failing in 1000 ways
-writemime(io::IO, ::MIME"text/plain", p::PermCycs) = print(io,p)
+writemime(io::IO, ::MIME"text/plain", p::PermCycs) = _print(io,p)

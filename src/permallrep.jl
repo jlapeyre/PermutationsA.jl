@@ -51,6 +51,9 @@ distance(c1::PermCycs, c2::PermCycs) = distance(permlist(c1),permlist(c2)) # ine
 
 ^(c::PermCycs, k::Integer) = PermCycs(PermPlain.canoncycles(PermPlain.permpower(c.data,k)))
 ppow(c::PermCycs, k::Integer) = PermList(PermPlain.cyc_pow_perm(c.data,k))
+
+*(c::PermCycs, n::Integer) = psparse(c) * n
+pmap(c::PermCycs, n::Integer) = c * n
 *(c1::PermCycs, c2::PermCycs) = cycles(list(c1)*list(c2)) # inefficient
 *(c::PermCycs, p::PermList) = list(c) * p # inefficient
 *(p::PermList, c::PermCycs) = p * list(c)
@@ -157,24 +160,16 @@ end
 # This is needed to avoid trying to print PermList with showarray and failing in 1000 ways
 writemime(io::IO, ::MIME"text/plain", p::PermSparse) = print(io,cycles(p))
 
-aprint(io::IO, c::PermCycs) = aprint(io,list(c))
-aprint(c::PermCycs) = aprint(STDOUT,c)
-aprint(io::IO,p::PermSparse) = aprint(io,list(p))
-aprint(p::PermSparse) = aprint(STDOUT,p)
-
-cprint(c::PermCycs) = print(c)
-cprint(io::IO,c::PermCycs) = print(io,c)
-cprint(io::IO,p::PermList) = print(io,cycles(p))
-cprint(p::PermList) = cprint(STDOUT,p)
-cprint(io::IO,p::PermSparse) = print(io,cycles(p))
-cprint(p::PermSparse) = cprint(STDOUT,p)
-
-lprint(io::IO,p::PermSparse) = lprint(io,list(p))
-lprint(p::PermSparse) = lprint(STDOUT,p)
-lprint(io::IO, c::PermCycs) = print(io,list(c))
-lprint(c::PermCycs) = lprint(STDOUT,c)
-lprint(io::IO, p::PermList) = print(io,p)
-lprint(p::PermList) = lprint(STDOUT,p)
+for ptype in ( :PermCycs, :PermSparse , :PermMat, :PermList )
+    @eval begin
+        aprint(io::IO, c::$ptype) = _aprint(io,list(c))
+        aprint(c::$ptype) = aprint(STDOUT,c)
+        cprint(io::IO,c::$ptype) = _print(io,cycles(c))
+        cprint(c::$ptype) = cprint(STDOUT,cycles(c))
+        lprint(io::IO,c::$ptype) = _lprint(io,list(c))
+        lprint(c::$ptype) = lprint(STDOUT,list(c))        
+    end
+end
 
 # stopgap
 mprint(io::IO,p::AbstractPerm) = print(io,full(p))

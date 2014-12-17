@@ -7,6 +7,8 @@ import Base: rank, sign, det, logdet, trace, ishermitian, issym,
 iseven, istriu, istril, isposdef, null, getindex, transpose,
 ctranspose, inv, pmap, isperm, one, zero, full, sparse, size, eltype
 
+import Base: eig, eigfact, eigmax, eigmin, eigs, eigvals, eigvecs
+
 size(m::AbstractPerm) = (s = plength(m); (s,s))
 eltype{T}(c::AbstractPerm{T}) = T
 
@@ -55,3 +57,10 @@ istriu(p::AbstractPerm) = isid(p)
 istril(p::AbstractPerm) = isid(p)
 isposdef(p::AbstractPerm) = isid(p)
 null(p::AbstractPerm) = zeros(Float64,plength(p),0) # for consistency
+
+# These can be computed efficiently without using full matrices
+for f in ( :eig, :eigfact, :eigmax, :eigmin, :eigs, :eigvals, :eigvecs)
+    @eval begin
+        ($f)(p::AbstractPerm) = ($f)(full(p))
+    end
+end

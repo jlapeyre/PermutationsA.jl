@@ -76,15 +76,15 @@ for (ptype, lcptype) in  ( (:PermMat, :permmat ) , (:PermList, :permlist))
         kron{T,S}(a::$ptype{T}, b::AbstractMatrix{S}) = PermPlain.permkron(a.data,b)
         
         # How to use keyword arguments?
-        function aprint(io::IO, p::$ptype)
+        function _aprint(io::IO, p::$ptype)
             PermPlain.permarrprint(io,p.data)
             println(io)
             PermPlain.permarrprint(io,[1:length(p.data)])
         end
-        aprint(p::$ptype) = aprint(STDOUT,p)
+        _aprint(p::$ptype) = _aprint(STDOUT,p)
         print(io::IO, p::$ptype) = PermPlain.permarrprint(io,p.data)
-        lprint(io::IO, p::$ptype) = print(io,p)
-        lprint(p::$ptype) = lprint(STDOUT,p)
+        _lprint(io::IO, p::$ptype) = print(io,p)
+        _lprint(p::$ptype) = _lprint(STDOUT,p)
         
     end
     
