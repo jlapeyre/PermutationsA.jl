@@ -242,5 +242,6 @@ Permutation types support element type parameters,
 ```julia
 julia> typeof(PermList(Int32[3,2,1]))
 PermList{Int32} (constructor with 1 method)
+```
 
 For other features, see the test and source files.
