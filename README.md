@@ -40,7 +40,7 @@ are provided. For instance this
  kron(PermMat(v),M)
  ```
 performs a kronecker product taking advantage of the structure of a permutation matrix.
-```Permat(v)``` only captures a pointer to ```v```. No copying or construction of
+```PermMat(v)``` only captures a pointer to ```v```. No copying or construction of
 a matrix, except for the output matrix, is done.
 
 ### AbstractPerm
