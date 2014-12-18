@@ -72,7 +72,7 @@ methods that must be implemented by the concrete types.
 
 This type represents the permutation internally as a vector representing one-line form,
 but is meant to behave as much as possible like a ```Matrix```.  One-line form means that
-the data vector, operating on [1:n], i to data[i].  The majority of the methods for
+the data vector, operating on [1:n], maps i to data[i].  The majority of the methods for
 ```PermMatrix``` are identical to those of ```PermList```.
 
 ### PermList
@@ -250,7 +250,6 @@ randpermlist, randpermcycs, randpermmat, randpermsparse,
 numcycles finds the number of cycles (excluding 1-cycles).
 iscyclic returns true if the permutation is cyclic. We allow fixed
 points in a cyclic permutation.
-
 
 Permutation types support element type parameters,
 ```julia
