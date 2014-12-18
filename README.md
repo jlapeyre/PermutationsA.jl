@@ -247,6 +247,11 @@ strings of any type in various forms.
 randpermlist, randpermcycs, randpermmat, randpermsparse,
 ```randperm(type,n)``` : generate random permutations
 
+numcycles finds the number of cycles (excluding 1-cycles).
+iscyclic returns true if the permutation is cyclic. We allow fixed
+points in a cyclic permutation.
+
+
 Permutation types support element type parameters,
 ```julia
 julia> typeof(PermList(Int32[3,2,1]))

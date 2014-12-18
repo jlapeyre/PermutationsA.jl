@@ -15,7 +15,7 @@ length(p::PermList) = length(p.data)
 
 randcyclelist(n::Integer) = PermList(randcycle(n))
 
-pivtopermlist{T<:Real}(piv::AbstractArray{T}) = PermPlain.ipiv2perm(piv)
+pivtopermlist{T<:Real}(piv::AbstractArray{T}) = PermList(PermPlain.ipiv2perm(piv))
 pivtopermlist{T<:Real}(piv::AbstractArray{T},n) = PermPlain.ipiv2perm(piv,n)
 
 ## Apply permutation, and permutation operations ##

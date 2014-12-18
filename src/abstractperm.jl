@@ -1,7 +1,7 @@
 abstract AbstractPerm{T} <: AbstractMatrix{T}
 
 export AbstractPerm
-export plength, isid, topiv
+export plength, isid, topiv, numcycles, iscyclic
 
 import Base: rank, sign, det, logdet, trace, ishermitian, issym,
 iseven, istriu, istril, isposdef, null, getindex, transpose,
@@ -47,6 +47,9 @@ ctranspose(m::AbstractPerm) = inv(m)
 transpose(m::AbstractPerm) = inv(m)
 inv(m::AbstractPerm) = m^-1
 topiv(p::AbstractPerm) = PermPlain.perm2ipiv(list(p).data)
+numcycles(p::AbstractPerm) = length(cyclelengths(p))
+# We allow fixed points in this definition. See wikipedia
+iscyclic(p::AbstractPerm) = numcycles(p) == 1
 
 rank(p::AbstractPerm) = plength(p)
 det(p::AbstractPerm) = sign(p)

@@ -32,3 +32,11 @@ for el in ( :c, :p, :s, :m)
         @test iseven($el)
     end
 end
+
+p = PermList([2,7,8,3,1,9,6,4,5,10])
+@test pivtopermlist(topiv(p)) == p
+
+q = PermList([5,6,9,1,4,7,8,3,2,10])
+q1 = pivtopermlist([5,6,9,5,5,7,8,9,9,10])
+@test q1 == q
+

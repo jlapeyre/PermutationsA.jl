@@ -1,3 +1,5 @@
+# Test features specific to PermMat
+
 m = PermMat([2, 1, 4, 5, 3])
 m3 = m * 3
 @test size(m3) == (5,5)
