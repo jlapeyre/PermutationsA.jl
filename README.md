@@ -119,7 +119,7 @@ julia> c = permcycs( (1,10^5), (2,3) )   # construct with tuples of disjoint cyc
 julia> p = list(c); length(p.data)   # convert to PermList. The data is a big array.
 100000
 
-julia> @time c^100000;    # Use efficient algorithm copied from Gap
+julia> @time c^100000;    # Use efficient algorithm copied from Pari
 elapsed time: 2.3248e-5 seconds (320 bytes allocated)
 
 julia> @time p^100000;    # Operate on big list. Julia is really fast, anyway
@@ -241,7 +241,7 @@ aprint,cprint,lprint,mprint,astring,cstring,lstring,mstring: Print or make
 strings of any type in various forms.
 
 ```* ^``` : composition and power, using various algorithms. ppow(c::PermCyc,n)
-    gives power of c as a PermList using an algorithm from Gap that may be
+    gives power of c as a PermList using an algorithm from Pari that may be
     more efficient than ```list(c^n)```.
 
 randpermlist, randpermcycs, randpermmat, randpermsparse,
