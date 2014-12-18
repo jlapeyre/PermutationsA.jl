@@ -1,13 +1,14 @@
 abstract AbstractPerm{T} <: AbstractMatrix{T}
 
 export AbstractPerm
-export plength, isid
+export plength, isid, topiv
 
 import Base: rank, sign, det, logdet, trace, ishermitian, issym,
 iseven, istriu, istril, isposdef, null, getindex, transpose,
 ctranspose, inv, pmap, isperm, one, zero, full, sparse, size, eltype
 
 import Base: eig, eigfact, eigmax, eigmin, eigs, eigvals, eigvecs
+import DataStructures: list
 
 size(m::AbstractPerm) = (s = plength(m); (s,s))
 eltype{T}(c::AbstractPerm{T}) = T
@@ -19,7 +20,7 @@ getindex(m::AbstractPerm, i::Real, j::Real) =  pmap(m,i) == j ? one(eltype(m)) :
 \(p::AbstractPerm, k::Integer) = k / p
 
 function mkerrf()
-    for sym in (:plength, :isid, :isperm, :pmap, :sign )
+    for sym in (:plength, :isid, :isperm, :pmap, :sign, :list)
         @eval begin
             ($sym)(p::AbstractPerm) = error("AbstractPerm: `", $sym , "' not defined for ", typeof(p))
         end
@@ -45,6 +46,7 @@ zero(p::AbstractPerm) = error("zero not defined for type ", typeof(p))
 ctranspose(m::AbstractPerm) = inv(m)
 transpose(m::AbstractPerm) = inv(m)
 inv(m::AbstractPerm) = m^-1
+topiv(p::AbstractPerm) = PermPlain.perm2ipiv(list(p).data)
 
 rank(p::AbstractPerm) = plength(p)
 det(p::AbstractPerm) = sign(p)
@@ -58,7 +60,11 @@ istril(p::AbstractPerm) = isid(p)
 isposdef(p::AbstractPerm) = isid(p)
 null(p::AbstractPerm) = zeros(Float64,plength(p),0) # for consistency
 
-# These can be computed efficiently without using full matrices
+
+
+# These can be computed more efficiently without using full matrices
+# lufact can be done very easily, but we have to break into the
+# interface
 for f in ( :eig, :eigfact, :eigmax, :eigmin, :eigs, :eigvals, :eigvecs)
     @eval begin
         ($f)(p::AbstractPerm) = ($f)(full(p))

@@ -1,6 +1,7 @@
 export PermList
 export randpermlist, leastmoved, greatestmoved, supportsize, support, fixed
 export pow2
+export pivtopermlist
 
 import DataStructures: list
 
@@ -13,6 +14,9 @@ getindex{T}(p::PermList{T}, k::Real) = k > length(p.data) ? convert(T,k) : (p.da
 length(p::PermList) = length(p.data)
 
 randcyclelist(n::Integer) = PermList(randcycle(n))
+
+pivtopermlist{T<:Real}(piv::AbstractArray{T}) = PermPlain.ipiv2perm(piv)
+pivtopermlist{T<:Real}(piv::AbstractArray{T},n) = PermPlain.ipiv2perm(piv,n)
 
 ## Apply permutation, and permutation operations ##
 

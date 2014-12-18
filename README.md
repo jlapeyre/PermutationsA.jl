@@ -30,22 +30,17 @@ and concrete subtypes:
 These types differ both in how they store the data representing the
 permutation, and in their interaction with other types.
 
-This package is not meant to create a type hierarchy faithfully
-reproducing mathematical structures.  It is also meant to be more than
-an exercise in learning Julia.  Some choices follow those made by
-other languages that have had implementations of permutations for many
-years.  One goal of the package is efficiency. The objects are
-lightweight; there is little copying and validation, although
-```copy``` and ```isperm``` methods are provided. For instance this
+This package is not meant to create a type hierarchy faithfully reproducing mathematical
+structures.  It is also meant to be more than an exercise in learning Julia.  Some choices
+follow those made by other languages that have had implementations of permutations for
+many years. One goal of the package is efficiency. The objects are lightweight; there is
+little copying and validation, although ```copy``` and ```isperm``` methods are
+provided. For instance this
 
-```julia
- M = rand(10,10)        
- v = randperm(10)
- kron(PermMat(v),M)
- ```
-performs a Kronecker product taking advantage of the structure of a permutation matrix.
-```PermMat(v)``` only captures a pointer to ```v```. No copying or construction of
-a matrix, apart from the output (dense) matrix, is done.
+```julia M = rand(10,10) v = randperm(10) kron(PermMat(v),M) ``` performs a Kronecker
+ product taking advantage of the structure of a permutation matrix.  ```PermMat(v)``` only
+ captures a pointer to ```v```. No copying or construction of a matrix, or list, apart
+ from the output (dense) matrix, is done.
 
 The Kronecker product of two permutations is a permutation. With
 dense matrices, this would crash your computer,
@@ -75,22 +70,26 @@ methods that must be implemented by the concrete types.
 
 ### PermMat
 
-This type stores data in one-line form, but is meant to behave as much as
-possible like a ```Matrix```. The majority of the methods are identical to
-those of ```PermList```.
+This type represents the permutation internally as a vector representing one-line form,
+but is meant to behave as much as possible like a ```Matrix```.  One-line form means that
+the data vector, operating on [1:n], i to data[i].  The majority of the methods for
+```PermMatrix``` are identical to those of ```PermList```.
 
 ### PermList
 
-```PermList``` behaves more like a permutation than a matrix when there
-is no conflict with role as a permutation.
-But note this difference between ```PermList``` and ```PermMat```
+```PermList``` represents the permutation internally in exactly the same way as
+```PermMatrix```. It also behaves like a matrix when there is no conflict with its role as
+a permutation.  Note this difference between ```PermList``` and ```PermMat```
 
 ```julia
 julia> p = randpermlist(3)
 ( 3 1 2 )
 
-julia> p * 3    # p maps 3 to 2
+julia> p * 3    # p maps 3 to 2   # Agrees with Gap
 2
+
+julia> 2 / p    # preimage of 2 is 3  # Agrees with Gap
+3
 
 julia> m = matrix(p)  # capture the pointer to the data in p, nothing else.
 3x3 PermMat{Int64}:   # But the display is different.
@@ -104,20 +103,23 @@ julia> m * 3          # PermMat behaves like a matrix whenever possible.
  3  0  0
  0  3  0
 
-julia> M = rand(3,3); kron(m,M) == kron(p,M) # kron can't be interpreted another way for a permutation
+julia> M = rand(3,3); kron(m,M) == kron(p,M)  # kron can't be interpreted another way for a permutation
 true
 ```
 
 ### PermCyc
 
+```PermCyc``` stores data internally as an array of arrays representing disjoint cycles
+in the standard canonical form (described below).
+
 ```julia
-julia> c = permcycs( (1,10^5), (2,3) )   # defined by list of disjoint cycles
+julia> c = permcycs( (1,10^5), (2,3) )   # construct with tuples of disjoint cycles
 ((1 100000)(2 3))
 
 julia> p = list(c); length(p.data)   # convert to PermList. The data is a big array.
 100000
 
-julia> @time c^100000;        # Take advantage of cycle structure (easy in this case)
+julia> @time c^100000;    # Use efficient algorithm copied from Gap
 elapsed time: 2.3248e-5 seconds (320 bytes allocated)
 
 julia> @time p^100000;    # Operate on big list. Julia is really fast, anyway
@@ -125,6 +127,9 @@ elapsed time: 0.01122444 seconds (1600192 bytes allocated)
 ```
 
 ### PermSparse
+
+```PermSparse``` stores data internally as a ```Dict``` of mappings for
+all non-fixed elements of the permutation.
 
 ```julia
 julia> s  = psparse(c)             # convert to PermSparse. Displays as disjoint cycles
@@ -225,7 +230,9 @@ julia> show(matrix(p)[1:10])  # first column of the matrix
 ## Sundry
 
 Use ```list```, ```cycles```, ```psparse```, and ```matrix``` to convert from
-one type to another.
+one type to another. Use ```pivtopermlist``` to convert the 'pivot' vector
+to ```PermList```, and ```topiv``` to convert an ```AbstractPerm``` to
+a pivot vector.
 
 Use ```full(p)``` and ```sparse(p)``` to get dense and sparse matrices
 from any permutation type.
@@ -233,7 +240,9 @@ from any permutation type.
 aprint,cprint,lprint,mprint,astring,cstring,lstring,mstring: Print or make
 strings of any type in various forms.
 
-```* ^``` : composition and power, using various algorithms.
+```* ^``` : composition and power, using various algorithms. ppow(c::PermCyc,n)
+    gives power of c as a PermList using an algorithm from Gap that may be
+    more efficient than ```list(c^n)```.
 
 randpermlist, randpermcycs, randpermmat, randpermsparse,
 ```randperm(type,n)``` : generate random permutations

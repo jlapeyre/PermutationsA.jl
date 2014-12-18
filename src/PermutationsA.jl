@@ -12,7 +12,6 @@ import Base: show,print,writemime
 import Base: kron
 import PermPlain: permlist, permcycles, permsparse, permmatrix
 
-
 include("abstractperm.jl")
 include("permlist.jl")
 include("permcycs.jl")
