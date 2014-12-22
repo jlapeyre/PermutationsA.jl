@@ -7,11 +7,12 @@ Data types and methods for permutations
 ## Overview
 
 This module implements representations of permutations: list, disjoint
-cycles, and matrix, and sparse (not ```SparseMatrix```). The name is
-```PermuationsA``` to distinguish it from the
-[```Permutations```](https://github.com/scheinerman/Permutations.jl)
-package. This module wraps generic routines in the package
+cycles, and matrix, and sparse (not ```SparseMatrix```).  This module wraps generic routines in the package
 [```PermPlain```](https://github.com/jlapeyre/PermPlain.jl)
+The name is ```PermuationsA``` to distinguish it from the
+[```Permutations```](https://github.com/scheinerman/Permutations.jl)
+package. ```PermuationsA``` differes from  ```Permuations```
+mainly in that it is broader in scope and avoids copying and validating. 
 
 The Julia manual says the ```AbstractArray``` type includes
 everything [vaguely array-like](http://julia.readthedocs.org/en/latest/manual/arrays/#implementation).
