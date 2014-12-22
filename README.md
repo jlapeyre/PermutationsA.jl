@@ -9,9 +9,9 @@ Data types and methods for permutations
 This module implements representations of permutations: list, disjoint
 cycles, and matrix, and sparse (not ```SparseMatrix```).  This module wraps generic routines in the package
 [```PermPlain```](https://github.com/jlapeyre/PermPlain.jl)
-The name is ```PermuationsA``` to distinguish it from the
+The name is ```PermutationsA``` to distinguish it from the
 [```Permutations```](https://github.com/scheinerman/Permutations.jl)
-package. ```PermuationsA``` differes from  ```Permuations```
+package. ```PermutationsA``` differs from  ```Permutations```
 mainly in that it is broader in scope and avoids copying and validating. 
 
 The Julia manual says the ```AbstractArray``` type includes
@@ -261,3 +261,22 @@ PermList{Int32} (constructor with 1 method)
 ```
 
 For other features, see the test and source files.
+
+<!--  LocalWords:  julia AbstractPerm AbstractMatrix subtypes PermCyc
+ -->
+<!--  LocalWords:  PermList PermMat PermSparse isperm randperm kron
+ -->
+<!--  LocalWords:  randpermmat AbtractPerm det logdet ishermitian inv
+ -->
+<!--  LocalWords:  issym istriu istril isposdef getindex ctranspose
+ -->
+<!--  LocalWords:  eltype PermMatrix randpermlist preimage permcycs
+ -->
+<!--  LocalWords:  tuples Pari psparse PermCycs isid plength pmap
+ -->
+<!--  LocalWords:  pivtopermlist topiv aprint cprint lprint mprint
+ -->
+<!--  LocalWords:  astring cstring lstring mstring ppow randpermcycs
+ -->
+<!--  LocalWords:  randpermsparse numcycles iscyclic typeof
+ -->
